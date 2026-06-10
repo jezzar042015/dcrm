@@ -8,6 +8,7 @@ import viteQRCode from 'vite-qr'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/dcrm/',
   plugins: [
     vue(),
     vueDevTools(),
