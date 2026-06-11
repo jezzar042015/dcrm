@@ -13,7 +13,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     tailwindcss(),
-     viteQRCode(),
+    viteQRCode(),
   ],
   resolve: {
     alias: {
