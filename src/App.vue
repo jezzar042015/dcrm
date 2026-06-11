@@ -13,7 +13,7 @@
     if (auth.token) {
       pages.active = 'dashboard'
     } else {
-      pages.active = 'home'
+      pages.active = 'login'
     }
   })
 </script>

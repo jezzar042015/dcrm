@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore('auth', () => {
 
-    const token = useStorage<string>('nimda-auth-token', '', localStorage)
+    const token = useStorage<string>('dcrm-auth-token', '', localStorage)
 
     const revoke = () => token.value = ''
 
