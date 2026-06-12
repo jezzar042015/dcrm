@@ -32,10 +32,16 @@
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="space-y-1">
                     <button @click="login"
                         class="uppercase text-sm py-3 px-10 rounded-3xl shadow-md bg-linear-to-r from-amber-400 to-amber-600 text-white cursor-pointer ">Login</button>
+                    <div>
+                        <button @click="goRegister" class="text-sm cursor-pointer p-2 underline">
+                            I don't have an account!
+                        </button>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -60,4 +66,6 @@
 
         if (resp) pages.active = 'dashboard'
     }
+
+    const goRegister = () => pages.active = 'register'
 </script>

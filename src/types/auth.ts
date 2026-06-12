@@ -14,3 +14,9 @@ export interface AuthenticatedUser {
     id: string
     role: 'admin' | 'elder' | 'ms' | 'pub'
 }
+
+export interface NewUser {
+    name: string
+    username: string
+    password: string
+}

@@ -14,17 +14,14 @@
     if (auth.token) {
       pages.active = 'dashboard'
     } else {
-      pages.active = 'home'
+      pages.active = 'register'
     }
   })
 </script>
 
 <template>
-
-  <div class="p-4">
-    <AppGuest v-if="pages.active === 'home'" />
-    <AppLogin v-if="pages.active === 'login'" />
-    <AppRegister v-if="pages.active === 'register'" />
-    <Dashboard v-if="pages.active === 'dashboard'" />
-  </div>
+  <AppGuest v-if="pages.active === 'home'" />
+  <AppLogin v-if="pages.active === 'login'" />
+  <AppRegister v-if="pages.active === 'register'" />
+  <Dashboard v-if="pages.active === 'dashboard'" />
 </template>
