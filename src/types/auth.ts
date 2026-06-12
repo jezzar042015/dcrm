@@ -1,11 +1,11 @@
 export interface AuthResponse {
-    status: 200 | 201 | 400 | 401 | 403 | 500
+    status: 200 | 201 | 202 | 400 | 401 | 403 | 409 | 500
     message: string
     token?: {
         token: string,
         ts: string,
     }
-    data?: AuthenticatedUser
+    data?: AuthenticatedUser | DisallowedUser
 }
 
 export interface AuthenticatedUser {
@@ -13,6 +13,12 @@ export interface AuthenticatedUser {
     username: string
     id: string
     role: 'admin' | 'elder' | 'ms' | 'pub'
+}
+
+export interface DisallowedUser {
+    username: string
+    accountStatus: 'pending' | 'inactive' | 'active'
+    createdAt: string
 }
 
 export interface NewUser {

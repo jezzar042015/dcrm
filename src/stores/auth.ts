@@ -1,17 +1,41 @@
-import type { AuthenticatedUser, AuthResponse } from "@/types/auth";
+import type { AuthenticatedUser, AuthResponse, DisallowedUser } from "@/types/auth";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 export const useAuthStore = defineStore('auth', () => {
 
     const token = useStorage<string>('dcrm-auth-token', '', localStorage)
-    const tokenTs = useStorage<string>('dcrm-auth-tokenTs', '', localStorage, {
-        serializer: StorageSerializers.object
-    })
-    const user = useStorage<AuthenticatedUser | undefined>('dcrm-auth-user', undefined, localStorage)
+    const tokenTs = useStorage<string>(
+        'dcrm-auth-tokenTs',
+        '',
+        localStorage,
+        {
+            serializer: StorageSerializers.object
+        }
+    )
+
+    const user = useStorage<AuthenticatedUser | undefined>(
+        'dcrm-auth-user',
+        undefined,
+        localStorage,
+        {
+            serializer: StorageSerializers.object
+        }
+    )
+
+    const disallowedUser = useStorage<DisallowedUser | undefined>(
+        'dcrm-auth-disallowed',
+        undefined,
+        localStorage,
+        {
+            serializer: StorageSerializers.object
+        }
+    )
+
     const requesting = ref(false)
     const scriptID = 'AKfycbyhQ9uI3zv1QGq_Yqb8wxj_nwLFskKL0OBc5CYDz8xVOC2EMQ1uFVtgseBm038bqHq8sA'
+    const serverURL = `https://script.google.com/macros/s/${scriptID}/exec`;
 
     const revoke = () => {
         token.value = ''
@@ -19,16 +43,52 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = undefined
     }
 
-    const register = async (user: string, pass: string) => {
-        // 
+    const register = async (name: string, username: string, password: string) => {
+        try {
+            requesting.value = true
+            const response = await fetch(serverURL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'text/plain', // Using text/plain avoids CORS "preflight" issues with GAS
+                },
+                body: JSON.stringify({
+                    data: {
+                        name, username, password
+                    },
+                    action: 'register'
+                })
+            });
+
+            requesting.value = false
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json() as AuthResponse
+
+            if (result.status == 200) {
+                disallowedUser.value = result.data as DisallowedUser
+                return 'pending'
+            } else if (result.status == 409) {
+                return 'username-not-unique'
+            } else if (result.status == 500) {
+                return 'server-error'
+            } else {
+                return 'unknown'
+            }
+
+        } catch (e) {
+            console.error(e);
+            return 'server-error'
+        }
     }
 
     const login = async (username: string, password: string) => {
         try {
-            const url = `https://script.google.com/macros/s/${scriptID}/exec`;
-
             requesting.value = true
-            const response = await fetch(url, {
+            const response = await fetch(serverURL, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -47,27 +107,31 @@ export const useAuthStore = defineStore('auth', () => {
             }
 
             const result = await response.json() as AuthResponse
+            requesting.value = false
 
             if (result.status == 200) {
                 token.value = result.token?.token ?? ''
                 tokenTs.value = result.token?.ts ?? ''
-                user.value = result.data
+                user.value = result.data as AuthenticatedUser
                 return true
+            } else if (result.status == 202 || result.status == 403) {
+                disallowedUser.value = result.data as DisallowedUser
+                return false
             } else if (result.status == 400) {
                 return false
             }
 
-            requesting.value = true
+
         } catch (error) {
             console.error(error);
+            requesting.value = false
         }
     }
 
     const logout = async () => {
-        const url = `https://script.google.com/macros/s/${scriptID}/exec`;
 
         requesting.value = true
-        const response = await fetch(url, {
+        const response = await fetch(serverURL, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -80,6 +144,8 @@ export const useAuthStore = defineStore('auth', () => {
                 action: 'logout'
             })
         });
+
+        requesting.value = false
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -95,12 +161,49 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    const checkPendingUserStatus = async () => {
+        requesting.value = true
+        if (!disallowedUser.value) return
+        const response = await fetch(`${serverURL}?target=check-user-status&username=${disallowedUser.value.username}`)
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        requesting.value = false
+
+        const result = await response.json() as AuthResponse
+        const data = result.data as DisallowedUser
+
+        if (data.accountStatus === 'active') {
+            disallowedUser.value = undefined
+        }
+
+        return data.accountStatus
+    }
+
+    const userIsPending = computed(() => {
+        if (!disallowedUser.value) return false
+        return disallowedUser.value.accountStatus == 'pending'
+    })
+
+    const userIsDeactivated = computed(() => {
+        if (!disallowedUser.value) return false
+        return disallowedUser.value.accountStatus == 'inactive'
+    })
+
+    const pendingUserName = computed(() => disallowedUser.value?.username)
+
     return {
         token,
         requesting,
         revoke,
         register,
         login,
-        logout
+        logout,
+        checkPendingUserStatus,
+        userIsPending,
+        userIsDeactivated,
+        pendingUserName
     }
 })
