@@ -46,14 +46,18 @@
     import LockIcon from '@/icon/LockIcon.vue';
     import UserIcon from '@/icon/UserIcon.vue';
     import { useAuthStore } from '@/stores/auth';
+    import { usePageStore } from '@/stores/pages';
     import { ref } from 'vue';
 
     const auth = useAuthStore()
+    const pages = usePageStore()
 
     const username = ref('')
     const password = ref('')
 
     const login = async () => {
+        const resp = await auth.login(username.value, password.value)
 
+        if (resp) pages.active = 'dashboard'
     }
 </script>
