@@ -16,7 +16,7 @@
 
   onMounted(async () => {
     if (auth.token) {
-      pages.active = 'contacts-list'
+      pages.active = 'dashboard'
       await contacts.fetchContacts()
     } else if (auth.userIsPending) {
       pages.active = 'user-pending'
