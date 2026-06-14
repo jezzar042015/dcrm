@@ -60,3 +60,8 @@ export type GroupedContactsByStatus = {
   status: string;
   contacts: ContactRow[];
 };
+
+export type GroupedContactsByTown = {
+  town: string;
+  contacts: ContactRow[];
+};
