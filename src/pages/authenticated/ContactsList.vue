@@ -5,6 +5,7 @@
                 <ArrowIcon class="h-5 w-5 rotate-180" />
             </div>
             <div>Contacts</div>
+            <div class="text-[10px] py-0.5 px-1 rounded-sm bg-gray-100">{{ contacts.contacts.length }}</div>
         </div>
         <div class="flex-1 overflow-auto">
             <div>
@@ -15,7 +16,7 @@
                         <div class="text-[10px] py-0.5 px-1 rounded-sm bg-gray-100">{{ value.contacts.length }}</div>
                     </div>
                     <div>
-                        <CaretSmall class="h-6 w-6"/>
+                        <CaretSmall class="h-6 w-6" />
                     </div>
                 </div>
             </div>
@@ -25,7 +26,7 @@
 
 <script setup lang="ts">
     import ArrowIcon from '@/icon/ArrowIcon.vue';
-import CaretSmall from '@/icon/CaretSmall.vue';
+    import CaretSmall from '@/icon/CaretSmall.vue';
     import { useContactStore } from '@/stores/contacts';
     import { usePageStore } from '@/stores/pages';
 
