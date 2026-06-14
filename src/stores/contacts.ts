@@ -70,6 +70,7 @@ export const useContactStore = defineStore('contacts', () => {
     return {
         contacts,
         groupedByStatus,
+        isLoading,
         fetchContacts
     }
 })
