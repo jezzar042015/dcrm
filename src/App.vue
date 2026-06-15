@@ -27,9 +27,9 @@
   onMounted(async () => {
     if (auth.token) {
       pages.active = 'dashboard'
-      await contacts.fetchContacts()
-      await calls.fetchCalls()
-      await terr.fetchTerritories()
+      // await contacts.fetchContacts()
+      // await calls.fetchCalls()
+      // await terr.fetchTerritories()
 
       // const targetSample = contacts.contacts.find(t => t[0] === 'tac00011')
       // if (targetSample) {

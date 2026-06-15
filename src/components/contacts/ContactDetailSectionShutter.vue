@@ -1,5 +1,5 @@
 <template>
-    <div class="px-2 mt-3">
+    <div class="px-2 mt-2">
         <div class="bg-gray-100 py-3 px-4 flex items-center justify-between cursor-pointer">
             <div>{{ title }}</div>
             <div>

@@ -18,7 +18,8 @@
                             <ContactDetailField label="Signing" :value="contacts.onDetail[19]" />
                         </div>
 
-                        <div class="flex h-35 w-35 rounded-full bg-gray-200">
+                        <div class="flex h-35 w-35 rounded-full bg-gray-200 overflow-hidden">
+                            <img v-if="imgSrc" :src="imgSrc" alt="" class="h-full w-full object-cover">
                         </div>
 
                     </div>
@@ -30,6 +31,8 @@
 
                     <ContactDetailField label="Deaf is" :value="contacts.onDetail[21]" />
                     <ContactDetailField label="About their family" :value="contacts.onDetail[20]" />
+                    <ContactDetailField v-if="contacts.onDetail[8] === 'Bible Study'" label="Bible teacher"
+                        :value="contacts.onDetail[9]" />
                 </div>
 
                 <ContactDetailSectionShutter @click="setSection('location')" title="Location"
@@ -41,17 +44,16 @@
                     <ContactDetailField label="Landmark" :value="contacts.onDetail[12]" />
                 </div>
 
-                <ContactDetailSectionShutter @click="setSection('guardians')" title="Guardians"
-                    :expanded="activeSection === 'guardians'" />
-
-
                 <ContactDetailSectionShutter @click="setSection('calls')" title="Visits"
                     :expanded="activeSection === 'calls'" />
-                <div v-if="activeSection === 'calls'" class="p-6 space-y-4">
+                <div v-if="activeSection === 'calls'" class="py-6 px-4 space-y-2">
                     <template v-for="call in relatedCalls" :key="call[0]">
                         <CallItem :call />
                     </template>
                 </div>
+
+                <ContactDetailSectionShutter @click="setSection('guardians')" title="Guardians"
+                    :expanded="activeSection === 'guardians'" />
 
             </div>
         </div>
@@ -62,20 +64,25 @@
     import ArrowIcon from '@/icon/ArrowIcon.vue';
     import ContactDetailField from '../../../components/contacts/ContactDetailField.vue';
     import ContactDetailSectionShutter from '../../../components/contacts/ContactDetailSectionShutter.vue';
-    import { computed, ref } from 'vue';
+    import { computed, onMounted, ref } from 'vue';
     import { useContactStore } from '@/stores/contacts';
     import { usePageStore } from '@/stores/pages';
     import { useTerritoryStore } from '@/stores/territories.ts';
     import { useContactCallStore } from '@/stores/calls.ts';
     import CallItem from '@/components/calls/CallItem.vue';
+    import { useAuthStore } from '@/stores/auth.ts';
+    import { useProfileImageStore } from '@/stores/profileImages.ts';
 
     const contacts = useContactStore()
     const pages = usePageStore()
     const terr = useTerritoryStore()
     const calls = useContactCallStore()
+    const auth = useAuthStore()
+    const profile = useProfileImageStore()
 
     type DetailSections = 'location' | 'guardians' | 'calls' | ''
     const activeSection = ref<DetailSections>('location')
+    const imgSrc = ref<string>('')
 
     const setSection = (s: DetailSections) => {
         if (activeSection.value === s) {
@@ -116,5 +123,20 @@
         return calls.data
             .filter(c => c[1] === contacts.onDetail?.[0])
             .sort((a, b) => b[4].localeCompare(a[4]))
+    })
+
+    const getProfileImg = async () => {
+        if (!contacts.onDetail || !contacts.onDetail[3]) return undefined
+        if (contacts.onDetail[3]) {
+            const src = await profile.getProfileImg(contacts.onDetail[3], auth.token)
+
+            if (src) {
+                imgSrc.value = src
+            }
+        }
+    }
+
+    onMounted(() => {
+        getProfileImg()
     })
 </script>
