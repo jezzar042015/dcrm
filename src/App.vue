@@ -24,6 +24,13 @@
     if (auth.token) {
       pages.active = 'dashboard'
       await contacts.fetchContacts()
+
+      // const targetSample = contacts.contacts.find(t => t[0] === 'tac00011')
+      // if (targetSample) {
+      //   contacts.onDetail = targetSample
+      //   pages.active = 'contact-details'
+      // }
+
     } else if (auth.userIsPending) {
       pages.active = 'user-pending'
     } else {
@@ -41,7 +48,7 @@
   <PendingUser v-if="pages.active === 'user-pending'" />
   <Dashboard v-if="pages.active === 'dashboard'" />
   <ContactDetails v-if="pages.active === 'contact-details'" />
-  
+
   <KeepAlive>
     <ContactsList v-if="pages.active === 'contacts-list'" />
   </KeepAlive>

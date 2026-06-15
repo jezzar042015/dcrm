@@ -1,7 +1,8 @@
 <template>
     <div>
         <div @click="setOnDetail"
-            class="flex items-center justify-between py-2 px-3 border-b border-b-gray-100 cursor-pointer">
+            class="flex items-center gap-2 py-2 px-3 border-b border-b-gray-100 cursor-pointer">
+            <div class="w-15 h-15 bg-gray-100 rounded-full flex"></div>
             <div class="p-4">
                 {{ `${contact[1]} ${contact[2]}` }}
             </div>
