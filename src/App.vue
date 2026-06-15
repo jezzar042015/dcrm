@@ -11,19 +11,22 @@
   import { useAuthStore } from './stores/auth';
   import { useContactStore } from './stores/contacts.ts';
   import { usePageStore } from './stores/pages';
+  import { useTerritoryStore } from './stores/territories.ts';
 
   const pages = usePageStore()
   const auth = useAuthStore()
   const contacts = useContactStore()
+  const terr = useTerritoryStore()
 
   const isLoading = computed(() => {
-    return contacts.isLoading
+    return contacts.isLoading || terr.isLoading
   })
 
   onMounted(async () => {
     if (auth.token) {
       pages.active = 'dashboard'
       await contacts.fetchContacts()
+      await terr.fetchTerritories()
 
       // const targetSample = contacts.contacts.find(t => t[0] === 'tac00011')
       // if (targetSample) {
