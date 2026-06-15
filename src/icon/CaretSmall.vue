@@ -4,7 +4,7 @@
         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
         <g id="SVGRepo_iconCarrier">
             <g id="Arrow / Caret_Right_SM">
-                <path id="Vector" d="M11 9L14 12L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                <path id="Vector" d="M11 9L14 12L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                     stroke-linejoin="round"></path>
             </g>
         </g>

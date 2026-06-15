@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+    import CaretSmall from '@/icon/CaretSmall.vue';
     import type { GroupedContactsByStatus } from '@/types/data';
 
     const { groupedByStatus } = defineProps<{

@@ -5,7 +5,8 @@ export type AppPages =
     'register' |
     'user-pending' |
     'user-deactivated' |
-    'contacts-list'
+    'contacts-list' |
+    'contact-details'
 
 
 

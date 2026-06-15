@@ -1,11 +1,20 @@
 <template>
     <div class="h-screen overflow-hidden flex flex-col">
-        <div class="px-3 py-5 border-b border-b-gray-200 flex gap-2 items-center">
-            <div @click="toDashboard" class="cursor-pointer">
-                <ArrowIcon class="h-5 w-5 rotate-180" />
+        <div class="px-3 py-5 border-b border-b-gray-200">
+            <div class="flex gap-2 items-center">
+                <div @click="stepBack" class="cursor-pointer">
+                    <ArrowIcon class="h-5 w-5 rotate-180" />
+                </div>
+                <div>Contacts</div>
             </div>
-            <div>Contacts</div>
-            <!-- <div class="text-[10px] py-0.5 px-1 rounded-sm bg-gray-100">{{ contacts.contacts.length }}</div> -->
+            <div class="pl-7 flex items-center gap-2">
+                <div v-for="(title, i) in pageTitle" :key="title" class="flex gap-1 items-center text-xs">
+                    <CaretSmall class="h-4 w-4" v-if="i > 0" />
+                    <span class="">
+                        {{ title }}
+                    </span>
+                </div>
+            </div>
         </div>
         <div class="flex-1 overflow-auto">
 
@@ -18,14 +27,9 @@
             </template>
 
             <template v-if="section === 'contacts'">
-                <div>
-                    <div v-for="value in townContacts" :key="value[0]"
-                        class="flex items-center justify-between py-2 px-3 border-b border-b-gray-100 cursor-pointer">
-                        <div class="p-4">
-                            {{ `${value[1]} ${value[2]}` }}
-                        </div>
-                    </div>
-                </div>
+                <template v-for="contact in townContacts" :key="contact[0]">
+                    <ContactListItem :contact />
+                </template>
             </template>
         </div>
     </div>
@@ -33,12 +37,14 @@
 
 <script setup lang="ts">
     import ArrowIcon from '@/icon/ArrowIcon.vue';
+    import CaretSmall from '@/icon/CaretSmall.vue';
     import ContactGroupedByStatus from '@/components/contacts/ContactGroupedByStatus.vue';
+    import ContactGroupedByTown from '@/components/contacts/ContactGroupedByTown.vue';
+    import ContactListItem from '@/components/contacts/ContactListItem.vue';
+    import type { ContactRow } from '@/types/data';
     import { computed, ref } from 'vue';
     import { useContactStore } from '@/stores/contacts';
     import { usePageStore } from '@/stores/pages';
-    import ContactGroupedByTown from '@/components/contacts/ContactGroupedByTown.vue';
-    import type { ContactRow } from '@/types/data';
 
     const contacts = useContactStore()
     const pages = usePageStore()
@@ -88,7 +94,7 @@
         return targetTownContacts.sort((a, b) => a[1].localeCompare(b[1]))
     })
 
-    const toDashboard = () => {
+    const stepBack = () => {
         if (section.value == 'status') {
             pages.active = 'dashboard'
         }
@@ -101,4 +107,11 @@
             section.value = 'towns'
         }
     }
+
+    const pageTitle = computed(() => {
+        if (section.value === 'status') return []
+        if (section.value === 'towns') return [status.value]
+        if (section.value === 'contacts') return [status.value, town.value]
+        return 'Contacts'
+    })
 </script>

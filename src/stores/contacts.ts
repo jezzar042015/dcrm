@@ -12,6 +12,7 @@ export const useContactStore = defineStore('contacts', () => {
     const isLoading = ref(false)
     const error = ref<string | null>(null)
     const auth = useAuthStore()
+    const onDetail = ref<null | ContactRow>(null)
 
     const groupedByStatus = computed(() => {
         const groups = new Map<string, ContactRow[]>();
@@ -71,6 +72,7 @@ export const useContactStore = defineStore('contacts', () => {
         contacts,
         groupedByStatus,
         isLoading,
+        onDetail,
         fetchContacts
     }
 })

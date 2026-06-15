@@ -2,21 +2,22 @@
   import AppGuest from './pages/AppGuest.vue';
   import AppLogin from './pages/user/AppLogin.vue';
   import AppRegister from './pages/user/AppRegister.vue';
-  import ContactsList from './pages/authenticated/ContactsList.vue';
+  import ContactDetails from './pages/authenticated/contacts/ContactDetails.vue';
+  import ContactsList from './pages/authenticated/contacts/ContactsList.vue';
   import Dashboard from './pages/authenticated/Dashboard.vue';
   import PendingUser from './pages/user/PendingUser.vue';
-  import { computed, onMounted } from 'vue';
+  import ProgressLine from './components/ProgressLine.vue';
+  import { computed, KeepAlive, onMounted } from 'vue';
   import { useAuthStore } from './stores/auth';
   import { useContactStore } from './stores/contacts.ts';
   import { usePageStore } from './stores/pages';
-  import ProgressLine from './components/ProgressLine.vue';
 
   const pages = usePageStore()
   const auth = useAuthStore()
   const contacts = useContactStore()
 
-  const isLoading = computed(()=> {
-     return contacts.isLoading
+  const isLoading = computed(() => {
+    return contacts.isLoading
   })
 
   onMounted(async () => {
@@ -39,5 +40,9 @@
   <AppRegister v-if="pages.active === 'register'" />
   <PendingUser v-if="pages.active === 'user-pending'" />
   <Dashboard v-if="pages.active === 'dashboard'" />
-  <ContactsList v-if="pages.active === 'contacts-list'" />
+  <ContactDetails v-if="pages.active === 'contact-details'" />
+  
+  <KeepAlive>
+    <ContactsList v-if="pages.active === 'contacts-list'" />
+  </KeepAlive>
 </template>
