@@ -2,13 +2,13 @@
     <div class="h-screen overflow-hidden flex flex-col">
         <div class="px-3 py-5 border-b border-b-gray-200">
             <div class="flex gap-2 items-center">
-                <div @click="stepBack" class="cursor-pointer">
+                <div @click="stepBack" class="cursor-pointer rounded-full p-2">
                     <ArrowIcon class="h-5 w-5 rotate-180" />
                 </div>
-                <div>{{ fullName }}</div>
+                <div class="font-bold text-lg">{{ fullName }}</div>
             </div>
         </div>
-        <div class="flex-1 overflow-auto">
+        <div class="flex-1 overflow-auto pb-8">
             <div v-if="contacts.onDetail" class="">
                 <div class="p-6 space-y-4">
                     <div class="flex justify-between">
@@ -43,33 +43,39 @@
 
                 <ContactDetailSectionShutter @click="setSection('guardians')" title="Guardians"
                     :expanded="activeSection === 'guardians'" />
-                <ContactDetailSectionShutter @click="setSection('visits')" title="Visits"
-                    :expanded="activeSection === 'visits'" />
+
+
+                <ContactDetailSectionShutter @click="setSection('calls')" title="Visits"
+                    :expanded="activeSection === 'calls'" />
+                <div v-if="activeSection === 'calls'" class="p-6 space-y-4">
+                    <template v-for="call in relatedCalls" :key="call[0]">
+                        <CallItem :call />
+                    </template>
+                </div>
 
             </div>
-
-            <pre v-if="false">
-                {{ contacts.onDetail }}
-            </pre>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
     import ArrowIcon from '@/icon/ArrowIcon.vue';
-    import ContactDetailField from './ContactDetailField.vue';
-    import ContactDetailSectionShutter from './ContactDetailSectionShutter.vue';
+    import ContactDetailField from '../../../components/contacts/ContactDetailField.vue';
+    import ContactDetailSectionShutter from '../../../components/contacts/ContactDetailSectionShutter.vue';
     import { computed, ref } from 'vue';
     import { useContactStore } from '@/stores/contacts';
     import { usePageStore } from '@/stores/pages';
     import { useTerritoryStore } from '@/stores/territories.ts';
+    import { useContactCallStore } from '@/stores/calls.ts';
+    import CallItem from '@/components/calls/CallItem.vue';
 
     const contacts = useContactStore()
     const pages = usePageStore()
     const terr = useTerritoryStore()
+    const calls = useContactCallStore()
 
-    type DetailSections = 'location' | 'guardians' | 'visits' | ''
-    const activeSection = ref<DetailSections>('')
+    type DetailSections = 'location' | 'guardians' | 'calls' | ''
+    const activeSection = ref<DetailSections>('location')
 
     const setSection = (s: DetailSections) => {
         if (activeSection.value === s) {
@@ -105,4 +111,10 @@
     const stepBack = () => {
         pages.active = 'contacts-list'
     }
+
+    const relatedCalls = computed(() => {
+        return calls.data
+            .filter(c => c[1] === contacts.onDetail?.[0])
+            .sort((a, b) => b[4].localeCompare(a[4]))
+    })
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div v-if="value">
         <div class="text-xs text-gray-600">{{ label }}</div>
-        <div class="">{{ value }}</div>
+        <div class="text-sm">{{ value }}</div>
     </div>
 </template>
 

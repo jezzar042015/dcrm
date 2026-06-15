@@ -12,20 +12,23 @@
   import { useContactStore } from './stores/contacts.ts';
   import { usePageStore } from './stores/pages';
   import { useTerritoryStore } from './stores/territories.ts';
+  import { useContactCallStore } from './stores/calls.ts';
 
   const pages = usePageStore()
   const auth = useAuthStore()
   const contacts = useContactStore()
+  const calls = useContactCallStore()
   const terr = useTerritoryStore()
 
   const isLoading = computed(() => {
-    return contacts.isLoading || terr.isLoading
+    return contacts.isLoading || terr.isLoading || calls.isLoading
   })
 
   onMounted(async () => {
     if (auth.token) {
       pages.active = 'dashboard'
       await contacts.fetchContacts()
+      await calls.fetchCalls()
       await terr.fetchTerritories()
 
       // const targetSample = contacts.contacts.find(t => t[0] === 'tac00011')

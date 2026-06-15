@@ -69,6 +69,18 @@ export type TerritoryRow = [
   dcrs: number,
 ]
 
+export type ContactCallRow = [
+  id: string,	
+  dcr_id: string,	
+  coverage_id: string,	
+  date_assigned: string,	
+  date_actual: string,	
+  publishers: string,	
+  mode: string,	
+  status: string,	
+  remarks: string,
+]
+
 export type GroupedContactsByStatus = {
   status: string;
   contacts: ContactRow[];

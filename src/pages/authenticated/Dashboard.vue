@@ -1,8 +1,6 @@
 <template>
     <div class="p-4">
-        <div>
-            Dashboard
-        </div>
+        <div>Hello {{ auth.user?.name }}!</div>
 
         <div @click="gotoContactsList" class="my-5 shadow round px-4 py-2">
             Contacts
