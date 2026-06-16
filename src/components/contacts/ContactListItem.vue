@@ -10,7 +10,7 @@
             </div>
             <div class="p-4">
                 <div> {{ `${contact[1]} ${contact[2]}` }}</div>
-                <div>{{ daysAgo }}</div>
+                <!-- <div>{{ daysAgo }}</div> -->
             </div>
         </div>
     </div>
@@ -45,15 +45,15 @@
         pages.active = 'contact-details'
     }
 
-    const latestCall = computed(() => {
-        const rec = calls.data
-            .filter(c => c[1] === contact[0])
-            .sort((a, b) => b[4].localeCompare(a[4]))
+    // const latestCall = computed(() => {
+    //     const rec = calls.data
+    //         .filter(c => c[1] === contact[0])
+    //         .sort((a, b) => b[4].localeCompare(a[4]))
 
-        return rec.length > 0 ? (rec[0]?.[4] ?? "") : ""
-    })
+    //     return rec.length > 0 ? (rec[0]?.[4] ?? "") : ""
+    // })
 
-    const { daysAgo } = useDaysAgo(latestCall)
+    // const { daysAgo } = useDaysAgo(latestCall)
 
 
     onMounted(async () => {
