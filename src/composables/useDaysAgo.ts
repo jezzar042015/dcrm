@@ -1,3 +1,4 @@
+// useDaysAgo.ts
 import { computed, ref, onUnmounted, type Ref } from 'vue'
 
 export function useDaysAgo(timestamp: Ref<string>) {
@@ -11,7 +12,7 @@ export function useDaysAgo(timestamp: Ref<string>) {
   onUnmounted(() => clearInterval(interval))
 
   const daysAgo = computed(() => {
-    if (!timestamp.value) return 'No Visit Record Yet!'
+    if (!timestamp.value) return 'No Call Visit'
     const date = new Date(timestamp.value).getTime()
     const diff = now.value - date
 

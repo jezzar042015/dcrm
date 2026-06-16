@@ -10,7 +10,7 @@
             </div>
             <div class="p-4">
                 <div> {{ `${contact[1]} ${contact[2]}` }}</div>
-                <!-- <div>{{ daysAgo }}</div> -->
+                <div>{{ daysAgo }}</div>
             </div>
         </div>
     </div>
@@ -24,9 +24,9 @@
     import { useAuthStore } from '@/stores/auth';
     import { useContactCallStore } from '@/stores/calls';
     import { useContactStore } from '@/stores/contacts';
-    import { useDaysAgo } from '@/composables/useDaysAgo';
     import { usePageStore } from '@/stores/pages';
     import { useProfileImageStore } from '@/stores/profileImages';
+    import { useDaysAgo } from '@/composables/useDaysAgo';
 
     const contacts = useContactStore()
     const pages = usePageStore()
@@ -45,15 +45,11 @@
         pages.active = 'contact-details'
     }
 
-    // const latestCall = computed(() => {
-    //     const rec = calls.data
-    //         .filter(c => c[1] === contact[0])
-    //         .sort((a, b) => b[4].localeCompare(a[4]))
+    const latestCall = computed(() => {
+        return calls.latestCallMap.get(contact[0]) ?? ''
+    })
 
-    //     return rec.length > 0 ? (rec[0]?.[4] ?? "") : ""
-    // })
-
-    // const { daysAgo } = useDaysAgo(latestCall)
+    const { daysAgo } = useDaysAgo(latestCall)
 
 
     onMounted(async () => {

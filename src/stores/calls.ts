@@ -1,7 +1,7 @@
 import type { ContactCallResponse } from "@/types/http";
 import type { ContactCallRow } from "@/types/data";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useAuthStore } from "./auth";
 import { useIDB } from "@/composables/useIDB";
 
@@ -46,7 +46,25 @@ export const useContactCallStore = defineStore('calls', () => {
         }
     }
 
+    const latestCallMap = computed(() => {
+        const map = new Map<string, string>()
+
+        for (const call of data.value) {
+            const contactId = call[1]
+            const callDate = call[4]
+
+            const current = map.get(contactId)
+
+            if (!current || callDate > current) {
+                map.set(contactId, callDate)
+            }
+        }
+
+        return map
+    })
+
     return {
+        latestCallMap,
         data,
         isLoading,
         fetchCalls
