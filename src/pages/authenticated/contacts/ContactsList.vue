@@ -51,6 +51,7 @@
                 </template>
             </template>
         </div>
+        <BottomNav />
     </div>
 </template>
 
@@ -65,6 +66,7 @@
     import { useContactStore } from '@/stores/contacts';
     import { usePageStore } from '@/stores/pages';
     import { useTerritoryStore } from '@/stores/territories';
+import BottomNav from '@/components/BottomNav.vue';
 
     const contacts = useContactStore()
     const pages = usePageStore()

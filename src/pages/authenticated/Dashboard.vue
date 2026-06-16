@@ -1,19 +1,21 @@
 <template>
-    <div class="h-screen overflow-hidden">
-        <div class="p-6">
-
+    <div class="h-screen overflow-hidden flex flex-col">
+        <div class="p-6 shadow">
             <div class="text-lg font-bold">Hello {{ auth.user?.name }}!</div>
-
+        </div>
+        <div class="flex-1">
             <div @click="gotoContactsList" class="my-5 shadow round px-4 py-2">
                 Contacts
             </div>
-            
-            
+
+
             <div class="mt-20">
                 <button @click="logout" class="text-sm shadow round px-4 py-2 cursor-pointer">Log out</button>
             </div>
         </div>
-
+        <div class="p-6 flex justify-center shadow rotate-180">
+            <div class="rotate-180">Home</div>
+        </div>
     </div>
 </template>
 
