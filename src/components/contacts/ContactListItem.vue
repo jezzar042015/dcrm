@@ -10,7 +10,8 @@
             </div>
             <div class="p-4">
                 <div> {{ `${contact[1]} ${contact[2]}` }}</div>
-                <div>{{ daysAgo }}</div>
+                <div v-if="contact[8] === 'Territory'" class="text-xs">{{ daysAgo }}</div>
+                <div v-if="contact[8] === 'Bible Study'" class="text-xs">{{ contact[9] }}</div>
             </div>
         </div>
     </div>
