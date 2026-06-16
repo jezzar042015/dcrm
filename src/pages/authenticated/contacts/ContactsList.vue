@@ -26,8 +26,29 @@
                 <ContactGroupedByTown :towns @select-town="selectTown" />
             </template>
 
-            <template v-if="section === 'contacts'" v-for="contact in townContacts" :key="contact[0]">
-                <ContactListItem :contact />
+            <template v-if="section === 'contacts'">
+                <template v-if="status !== 'Territory'" v-for="contact in townContacts" :key="contact[0]">
+                    <ContactListItem :contact />
+                </template>
+                <template v-else>
+                    <div class="text-xs p-4 bg-gray-50">
+                        <template v-for="tg in territoryGrouped" :key="tg.territoryId">
+                            <div class="mb-11 shadow bg-white rounded-sm">
+                                <div class="flex gap-2 items-center justify-between bg-gray-100 py-2 px-2 font-semibold">
+                                    <div>
+                                        {{ tg.territoryName || 'No Territory Assignment' }}
+                                    </div>
+                                    <div>{{ tg.contacts.length }}</div>
+                                </div>
+                                <div>
+                                    <template v-for="contact in tg.contacts" :key="contact[0]">
+                                        <ContactListItem :contact />
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
             </template>
         </div>
     </div>
@@ -43,9 +64,11 @@
     import { computed, ref } from 'vue';
     import { useContactStore } from '@/stores/contacts';
     import { usePageStore } from '@/stores/pages';
+    import { useTerritoryStore } from '@/stores/territories';
 
     const contacts = useContactStore()
     const pages = usePageStore()
+    const terr = useTerritoryStore()
     const section = ref<'status' | 'towns' | 'contacts'>('status')
     const status = ref('')
     const town = ref('')
@@ -90,6 +113,33 @@
 
         const targetTownContacts = targetTown?.contacts ?? []
         return targetTownContacts.sort((a, b) => a[1].localeCompare(b[1]))
+    })
+
+    const territoryGrouped = computed(() => {
+        const territoryGroups = new Map<string, ContactRow[]>();
+
+        for (const row of townContacts.value) {
+            const territoryGroupId: string | string[] =
+                (row[10] === "" || row[10] === null) ? ['no_territory_id'] : row[10].split(',')
+
+            for (const id of territoryGroupId) {
+
+                if (!territoryGroups.has(id)) {
+                    territoryGroups.set(id, [])
+                }
+
+                territoryGroups.get(id)!.push(row)
+            }
+
+        }
+
+        return Array.from(territoryGroups, ([territoryId, contacts]) => (
+            {
+                territoryId,
+                territoryName: terr.data.find(d => d[0] == territoryId)?.[2] ?? '',
+                contacts
+            }
+        )).sort((a, b) => a.territoryName?.localeCompare(b.territoryName))
     })
 
     const stepBack = () => {

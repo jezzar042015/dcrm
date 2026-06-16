@@ -14,6 +14,15 @@ export const useContactStore = defineStore('contacts', () => {
     const auth = useAuthStore()
     const onDetail = ref<null | ContactRow>(null)
 
+    const statusOrder = [
+        'Territory',
+        'Return Visit',
+        'Bible Study',
+        'Baptized Publisher',
+        'Moved',
+        'Deceased',
+    ];
+
     const groupedByStatus = computed(() => {
         const groups = new Map<string, ContactRow[]>();
 
@@ -29,7 +38,16 @@ export const useContactStore = defineStore('contacts', () => {
         return Array.from(groups, ([status, contacts]) => ({
             status,
             contacts,
-        }));
+        })).sort((a, b) => {
+            let indexA = statusOrder.indexOf(a.status);
+            let indexB = statusOrder.indexOf(b.status);
+
+            // If a status isn't in your list, push it to the very end
+            if (indexA === -1) indexA = Infinity;
+            if (indexB === -1) indexB = Infinity;
+
+            return indexA - indexB;
+        });
     })
 
 

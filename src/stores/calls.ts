@@ -1,9 +1,9 @@
+import type { ContactCallResponse } from "@/types/http";
 import type { ContactCallRow } from "@/types/data";
 import { defineStore } from "pinia";
-import { useIDB } from "@/composables/useIDB";
-import { useAuthStore } from "./auth";
 import { ref } from "vue";
-import type { ContactCallResponse } from "@/types/http";
+import { useAuthStore } from "./auth";
+import { useIDB } from "@/composables/useIDB";
 
 export const useContactCallStore = defineStore('calls', () => {
     const data = useIDB<ContactCallRow[]>('dcrm-data-calls', [])
