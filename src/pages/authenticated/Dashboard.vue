@@ -3,7 +3,9 @@
         <Sidebar :show="sideBar" @close-side-bar="sideBar = false" />
 
         <div class="p-5 shadow flex items-center gap-5">
-            <div class="bg-gray-100 h-8 w-8 rounded-full" @click="sideBar = true"></div>
+            <div class="bg-gray-100 h-10 w-10 rounded-full overflow-hidden" @click="sideBar = true">
+                <img :src="auth.userProfileImg" alt="" v-if="auth.userProfileImg" class="h-full w-full object-cover">
+            </div>
             <div class="text-lg font-bold">Hi {{ auth.user?.name }}!</div>
         </div>
 

@@ -1,5 +1,6 @@
 <template>
-    <div class="h-screen overflow-hidden flex flex-col">
+    <div class="h-screen overflow-hidden flex flex-col relative">
+        <ImageViewer :src="targetImg" v-if="imgViewer" @close-viewer="closeViewer" />
         <div class="px-3 py-5 border-b border-b-gray-200">
             <div class="flex gap-2 items-center">
                 <div @click="stepBack" class="cursor-pointer rounded-full p-2">
@@ -19,7 +20,8 @@
                         </div>
 
                         <div class="flex h-35 w-35 rounded-full bg-gray-200 overflow-hidden">
-                            <img v-if="imgSrc" :src="imgSrc" alt="" class="h-full w-full object-cover">
+                            <img v-if="imgSrc" :src="imgSrc" alt="" class="h-full w-full object-cover"
+                                @click="showViewer(imgSrc)">
                             <template v-else>
                                 <FemaleProfile v-if="contacts.onDetail[17] === 'Female'"
                                     class="h-full w-full text-gray-300" />
@@ -51,7 +53,7 @@
                 </div>
 
                 <ContactDetailSectionShutter @click="setSection('calls')" title="Visits"
-                    :expanded="activeSection === 'calls'" :count="relatedCalls.length"/>
+                    :expanded="activeSection === 'calls'" :count="relatedCalls.length" />
                 <div v-if="activeSection === 'calls'" class="py-6 px-4 space-y-2">
                     <template v-for="call in relatedCalls" :key="call[0]">
                         <CallItem :call />
@@ -80,6 +82,7 @@
     import { usePageStore } from '@/stores/pages';
     import { useProfileImageStore } from '@/stores/profileImages.ts';
     import { useTerritoryStore } from '@/stores/territories.ts';
+    import ImageViewer from '@/components/contacts/ImageViewer.vue';
 
     const contacts = useContactStore()
     const pages = usePageStore()
@@ -91,6 +94,18 @@
     type DetailSections = 'location' | 'guardians' | 'calls' | ''
     const activeSection = ref<DetailSections>('location')
     const imgSrc = ref<string>('')
+    const imgViewer = ref(false)
+    const targetImg = ref('')
+
+    const showViewer = (src: string) => {
+        targetImg.value = src
+        imgViewer.value = true
+    }
+
+    const closeViewer = () => {
+        imgViewer.value = false
+        targetImg.value = ''
+    }
 
     const setSection = (s: DetailSections) => {
         if (activeSection.value === s) {
@@ -114,6 +129,7 @@
 
     const address = computed(() => {
         if (!contacts.onDetail) return ''
+        if (!contacts.onDetail[14] && !contacts.onDetail[15] && !contacts.onDetail[16]) return 'No Address Provided'
         return `Brgy ${contacts.onDetail[14]}, ${contacts.onDetail[15]}, ${contacts.onDetail[16]}`
     })
 

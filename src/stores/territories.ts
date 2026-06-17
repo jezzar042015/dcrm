@@ -1,6 +1,6 @@
 import { useIDB } from "@/composables/useIDB";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useAuthStore } from "./auth";
 import type { TerritoryResponse } from "@/types/http";
 import type { TerritoryRow } from "@/types/data";
@@ -8,9 +8,12 @@ import type { TerritoryRow } from "@/types/data";
 export const useTerritoryStore = defineStore('territory', () => {
     const data = useIDB<TerritoryRow[]>('dcrm-data-territories', [])
 
+    const auth = useAuthStore()
+    
     const isLoading = ref(false)
     const error = ref<string | null>(null)
-    const auth = useAuthStore()
+    const scope = ref<'fsg' | 'cong'>('fsg')
+
 
     const fetchFromServer = async () => {
         isLoading.value = true
@@ -47,9 +50,23 @@ export const useTerritoryStore = defineStore('territory', () => {
         }
     }
 
+    const handledTerritoryIds = computed(() => {
+        let userFsgAssignment = ''
+
+        if (scope.value == 'fsg') {
+            userFsgAssignment = auth.associatedPublisher?.[8] ?? ''
+        }
+
+        return data.value
+            .filter(t => Boolean(t[4]) && (userFsgAssignment ? userFsgAssignment == t[4] : true))
+            .map(m => (m[0]))
+    })
+
     return {
         data,
         isLoading,
-        fetchFromServer
+        scope,
+        fetchFromServer,
+        handledTerritoryIds
     }
 })

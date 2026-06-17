@@ -4,15 +4,19 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { useAuthStore } from "./auth";
 import { useIDB } from "@/composables/useIDB";
+import { useTerritoryStore } from "./territories";
 
 export const useContactStore = defineStore('contacts', () => {
+
+    const auth = useAuthStore()
+    const terr = useTerritoryStore()
 
     const contacts = useIDB<ContactRow[]>('dcrm-data-contacts', [])
 
     const isLoading = ref(false)
     const error = ref<string | null>(null)
-    const auth = useAuthStore()
     const onDetail = ref<null | ContactRow>(null)
+    const searchKeyWords = ref('')
 
     const statusOrder = [
         'Territory',
@@ -32,7 +36,27 @@ export const useContactStore = defineStore('contacts', () => {
             if (!groups.has(status)) {
                 groups.set(status, []);
             }
-            groups.get(status)!.push(row);
+
+            let isOnSearch = true
+            let isResponsible = true 
+            
+            if (status == 'Territory') {
+                isResponsible = row[10] ? terr.handledTerritoryIds.includes(row[10]) : true
+            }
+            
+
+            if (searchKeyWords.value) {
+                isOnSearch = row
+                    .toString()
+                    .toLowerCase()
+                    .includes(searchKeyWords.value.toLowerCase())
+            }
+
+            /* if (row[8] !== 'Territory') { **/
+            if (isOnSearch && isResponsible) {
+                groups.get(status)!.push(row);
+            }
+            // } 
         }
 
         return Array.from(groups, ([status, contacts]) => ({
@@ -91,6 +115,7 @@ export const useContactStore = defineStore('contacts', () => {
         groupedByStatus,
         isLoading,
         onDetail,
+        searchKeyWords,
         fetchFromServer
     }
 })

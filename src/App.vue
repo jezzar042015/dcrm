@@ -32,7 +32,7 @@ import ContactsMap from './pages/maps/ContactsMap.vue';
       pages.active = 'dashboard'
       // contacts.fetchFromServer()
       // calls.fetchFromServer()
-      // terr.fetchFromServer()
+      terr.fetchFromServer()
       // pubs.fetchFromServer()
 
     } else if (auth.userIsPending) {

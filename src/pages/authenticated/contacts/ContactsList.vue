@@ -17,20 +17,34 @@
                     </div>
                 </div>
                 <div v-if="!showSearchInput" class="absolute right-5 p-1 cursor-pointer"
-                    @click="showSearchInput = true">
+                    @click.stop="showSearchInput = true">
                     <SearchGlass class="h-5 w-5" />
                 </div>
-                <div v-else class="flex gap-4">
-                    <input type="search" class="border-2 py-2 px-4 rounded-sm -mt-1 text-sm">
-                    <XCloseIcon class="h-5 w-5 mt-1 cursor-pointer" @click="showSearchInput = false" />
+                <div v-else class="flex gap-4" @click.stop="">
+                    <input ref="searchBox" type="search" v-model="contacts.searchKeyWords"
+                        class="border-2 py-2 px-4 rounded-sm -mt-1 text-sm decoration-0">
                 </div>
 
             </div>
         </div>
 
-        <div class="flex-1 overflow-auto relative">
+        <div class="flex-1 overflow-auto relative pb-10">
             <Transition :name="transitionName" mode="out-in">
                 <div :key="section">
+
+                    <div class="h-12 py-4 px-6">
+                        <div v-if="contacts.searchKeyWords && !showSearchInput"
+                            class="flex justify-between items-center">
+                            <div class="flex gap-1 text-sm text-amber-600">
+                                <div>Contacts filtered with '{{ contacts.searchKeyWords }}' </div>
+                            </div>
+                            <div>
+                                <button @click="contacts.searchKeyWords = ''"
+                                    class="shadow text-xs rounded-sm py-1 px-2 ">Remove Filter</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <template v-if="section === 'status'">
                         <ContactGroupedByStatus :grouped-by-status="contacts.groupedByStatus"
                             @select-status="selectStatus" />
@@ -70,7 +84,7 @@
                 </div>
             </Transition>
         </div>
-        <BottomNav />
+        <BottomNav @step-back-contacts="stepBack"/>
     </div>
 </template>
 
@@ -83,10 +97,10 @@
     import PeopleIcon from '@/icon/PeopleIcon.vue';
     import SearchGlass from '@/icon/SearchGlass.vue';
     import type { ContactRow } from '@/types/data';
-    import { computed, ref, watch } from 'vue';
+    import { computed, ref, useTemplateRef, watch } from 'vue';
     import { useContactStore } from '@/stores/contacts';
     import { useTerritoryStore } from '@/stores/territories';
-    import XCloseIcon from '@/icon/XCloseIcon.vue';
+    import { onClickOutside } from '@vueuse/core';
 
     type PageSections = 'status' | 'towns' | 'contacts'
     const contacts = useContactStore()
@@ -96,6 +110,10 @@
     const status = ref('')
     const town = ref('')
     const showSearchInput = ref(false)
+
+    const searchBox = useTemplateRef('searchBox')
+
+    onClickOutside(searchBox, event => showSearchInput.value = false)
 
     const selectStatus = (stat: string) => {
         status.value = stat

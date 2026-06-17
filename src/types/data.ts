@@ -61,7 +61,7 @@ export type TerritoryRow = [
   code: string,
   descriptions: string,
   geo_inclusions: string,
-  group: string,
+  responsible: string,
   latest_assignment: string,
   latest_completion: string,
   aging: number,
@@ -89,8 +89,8 @@ export type PublisherRow = [
   lastname: string,
   pic: string | null,
   address: string | null,
-  brgy: string | null,
   city: string | null,
+  group: string | null,
   cong: string | null,
   status: 'Active' | 'Inactive',
 ]

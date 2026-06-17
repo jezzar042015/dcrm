@@ -1,9 +1,15 @@
 import type { AuthenticatedUser, AuthResponse, DisallowedUser } from "@/types/auth";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
+import { usePublishersStore } from "./pubs";
+import { useProfileImageStore } from "./profileImages";
 
 export const useAuthStore = defineStore('auth', () => {
+
+    const pubs = usePublishersStore()
+    const profile = useProfileImageStore()
+    const auth = useAuthStore()
 
     const token = useStorage<string>('dcrm-auth-token', '', localStorage)
     const tokenTs = useStorage<string>(
@@ -61,7 +67,7 @@ export const useAuthStore = defineStore('auth', () => {
             });
 
             requesting.value = false
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -127,6 +133,33 @@ export const useAuthStore = defineStore('auth', () => {
             requesting.value = false
         }
     }
+
+    const associatedPublisher = computed(() => {
+        const f = pubs.data.find(p => p[1] === user.value?.id)
+        return f
+    })
+
+    const userProfileImg = ref('')
+
+    const getProfileImg = async () => {
+        if (!associatedPublisher.value) {
+            userProfileImg.value = '';
+            return
+        }
+
+        const path = associatedPublisher.value[5]
+
+        if (path) {
+            const src = await profile.getProfileImg(path, auth.token)
+            if (src) userProfileImg.value = src
+        }
+    }
+
+    watch(
+        () => associatedPublisher.value,
+        () => getProfileImg()
+    )
+
 
     const logout = async () => {
 
@@ -194,10 +227,12 @@ export const useAuthStore = defineStore('auth', () => {
 
     const pendingUserName = computed(() => disallowedUser.value?.username)
 
+
     return {
         token,
         requesting,
         user,
+        userProfileImg,
         revoke,
         register,
         login,
@@ -205,6 +240,7 @@ export const useAuthStore = defineStore('auth', () => {
         checkPendingUserStatus,
         userIsPending,
         userIsDeactivated,
-        pendingUserName
+        pendingUserName,
+        associatedPublisher
     }
 })
