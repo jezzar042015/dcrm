@@ -4,17 +4,18 @@
   import AppRegister from './pages/user/AppRegister.vue';
   import ContactDetails from './pages/authenticated/contacts/ContactDetails.vue';
   import ContactsList from './pages/authenticated/contacts/ContactsList.vue';
+  import ContactsMap from './pages/maps/ContactsMap.vue';
   import Dashboard from './pages/authenticated/Dashboard.vue';
   import PendingUser from './pages/user/PendingUser.vue';
   import ProgressLine from './components/ProgressLine.vue';
   import { computed, KeepAlive, onMounted } from 'vue';
   import { useAuthStore } from './stores/auth';
+  import { useContactCallStore } from './stores/calls.ts';
   import { useContactStore } from './stores/contacts.ts';
   import { usePageStore } from './stores/pages';
-  import { useTerritoryStore } from './stores/territories.ts';
-  import { useContactCallStore } from './stores/calls.ts';
   import { usePublishersStore } from './stores/pubs.ts';
-import ContactsMap from './pages/maps/ContactsMap.vue';
+  import { useTerritoryStore } from './stores/territories.ts';
+  import { useContactLocationsStore } from './stores/locations.ts';
 
   const pages = usePageStore()
   const auth = useAuthStore()
@@ -22,6 +23,7 @@ import ContactsMap from './pages/maps/ContactsMap.vue';
   const calls = useContactCallStore()
   const terr = useTerritoryStore()
   const pubs = usePublishersStore()
+  const locations = useContactLocationsStore()
 
   const isLoading = computed(() => {
     return contacts.isLoading || terr.isLoading || calls.isLoading
@@ -34,6 +36,7 @@ import ContactsMap from './pages/maps/ContactsMap.vue';
       calls.fetchFromServer()
       terr.fetchFromServer()
       pubs.fetchFromServer()
+      locations.fetchFromServer()
 
     } else if (auth.userIsPending) {
       pages.active = 'user-pending'
