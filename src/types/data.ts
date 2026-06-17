@@ -76,6 +76,7 @@ export type ContactLocationRow = [
   type: string,
   coordinates: string,
   remarks: string | null,
+  src: string,
 ]
 
 export type GroupedContactsByStatus = {

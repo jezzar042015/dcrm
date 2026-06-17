@@ -26,7 +26,11 @@
   const locations = useContactLocationsStore()
 
   const isLoading = computed(() => {
-    return contacts.isLoading || terr.isLoading || calls.isLoading
+    return contacts.isLoading ||
+      terr.isLoading ||
+      calls.isLoading ||
+      pubs.isLoading ||
+      locations.isLoading
   })
 
   onMounted(async () => {

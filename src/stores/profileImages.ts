@@ -72,8 +72,35 @@ export const useProfileImageStore = defineStore('profileImages', () => {
         }
     }
 
+    async function getCachedProfileImgOnly(targetFile: string): Promise<string | undefined> {
+        if (!targetFile) return;
+
+        const file = targetFile.split('/')[1];
+        if (!file) return;
+
+        // 1. Check in-memory cache first (super fast)
+        if (imageCache.value[file]) {
+            return imageCache.value[file];
+        }
+
+        // 2. Check IndexedDB cache only
+        try {
+            const cachedImg = await get<string>(`img_${file}`);
+            if (cachedImg) {
+                imageCache.value[file] = cachedImg; // Hydrate memory cache for subsequent requests
+                return cachedImg;
+            }
+        } catch (err) {
+            console.error('IndexedDB read error:', err);
+        }
+
+        // If it's not anywhere locally, return undefined immediately
+        return undefined;
+    }
+
     return {
         imageCache,
-        getProfileImg
+        getProfileImg,
+        getCachedProfileImgOnly
     }
 })
