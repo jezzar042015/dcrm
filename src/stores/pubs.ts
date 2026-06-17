@@ -1,12 +1,13 @@
-import type { ContactCallResponse } from "@/types/http";
-import type { ContactCallRow } from "@/types/data";
+
+import type { PublisherRow } from "@/types/data";
+import type { PublishersResponse } from "@/types/http";
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useAuthStore } from "./auth";
 import { useIDB } from "@/composables/useIDB";
 
-export const useContactCallStore = defineStore('calls', () => {
-    const data = useIDB<ContactCallRow[]>('dcrm-data-calls', [])
+export const usePublishersStore = defineStore('pubs', () => {
+    const data = useIDB<PublisherRow[]>('dcrm-data-pubs', [])
     const isLoading = ref(false)
     const error = ref<string | null>(null)
     const auth = useAuthStore()
@@ -16,6 +17,7 @@ export const useContactCallStore = defineStore('calls', () => {
         error.value = null
 
         try {
+
             const url = 'https://script.google.com/macros/s/AKfycbyZReqXsUttX2Gp4ujW7DKCIt-HZD0IZYkEALekOzEurZamWAQepA3UE684AO-GOkh-/exec'
             const response = await fetch(url, {
                 method: 'POST',
@@ -26,13 +28,13 @@ export const useContactCallStore = defineStore('calls', () => {
                 body: JSON.stringify({
                     data: {
                     },
-                    action: 'get-calls',
+                    action: 'get-pubs',
                     token: auth.token,
                 })
             })
             if (!response.ok) throw new Error('Network response was not ok')
 
-            const resp = await response.json() as ContactCallResponse
+            const resp = await response.json() as PublishersResponse
 
             if (resp.status === 200) {
                 data.value = resp.data
@@ -46,25 +48,7 @@ export const useContactCallStore = defineStore('calls', () => {
         }
     }
 
-    const latestCallMap = computed(() => {
-        const map = new Map<string, string>()
-
-        for (const call of data.value) {
-            const contactId = call[1]
-            const callDate = call[4]
-
-            const current = map.get(contactId)
-
-            if (!current || callDate > current) {
-                map.set(contactId, callDate)
-            }
-        }
-
-        return map
-    })
-
     return {
-        latestCallMap,
         data,
         isLoading,
         fetchFromServer

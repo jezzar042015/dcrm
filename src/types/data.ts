@@ -70,15 +70,29 @@ export type TerritoryRow = [
 ]
 
 export type ContactCallRow = [
-  id: string,	
-  dcr_id: string,	
-  coverage_id: string,	
-  date_assigned: string,	
-  date_actual: string,	
-  publishers: string,	
-  mode: string,	
-  status: string,	
+  id: string,
+  dcr_id: string,
+  coverage_id: string,
+  date_assigned: string,
+  date_actual: string,
+  publishers: string,
+  mode: string,
+  status: string,
   remarks: string,
+]
+
+export type PublisherRow = [
+  id: string,
+  userId: string | null,
+  signname: string,
+  firstname: string,
+  lastname: string,
+  pic: string | null,
+  address: string | null,
+  brgy: string | null,
+  city: string | null,
+  cong: string | null,
+  status: 'Active' | 'Inactive',
 ]
 
 export type GroupedContactsByStatus = {

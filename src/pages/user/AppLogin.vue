@@ -45,7 +45,7 @@
 
                 <div class="space-y-1 pt-2">
                     <button @click="login" :disabled="auth.requesting"
-                        class="uppercase text-sm py-3 px-10 rounded-3xl shadow-md bg-gradient-to-r from-amber-400 to-amber-600 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                        class="uppercase text-sm py-3 px-10 rounded-3xl shadow-md bg-linear-to-r from-amber-400 to-amber-600 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
                         <span>{{ auth.requesting ? 'Signing in...' : 'Login' }}</span>
                     </button>
                     <div>
@@ -66,13 +66,19 @@
     import LockIcon from '@/icon/LockIcon.vue';
     import UserIcon from '@/icon/UserIcon.vue';
     import { useAuthStore } from '@/stores/auth';
+    import { useContactCallStore } from '@/stores/calls';
     import { useContactStore } from '@/stores/contacts';
     import { usePageStore } from '@/stores/pages';
+    import { usePublishersStore } from '@/stores/pubs';
+    import { useTerritoryStore } from '@/stores/territories';
     import { ref } from 'vue';
 
     const auth = useAuthStore()
     const pages = usePageStore()
     const contacts = useContactStore()
+    const calls = useContactCallStore()
+    const terr = useTerritoryStore()
+    const pubs = usePublishersStore()
 
     const username = ref('')
     const password = ref('')
@@ -92,7 +98,11 @@
 
             if (resp) {
                 pages.active = 'dashboard'
-                contacts.fetchContacts()
+                contacts.fetchFromServer()
+                calls.fetchFromServer()
+                terr.fetchFromServer()
+                pubs.fetchFromServer()
+
             } else if (auth.userIsPending) {
                 pages.active = 'user-pending'
             } else if (auth.userIsDeactivated) {

@@ -12,7 +12,7 @@ export const useTerritoryStore = defineStore('territory', () => {
     const error = ref<string | null>(null)
     const auth = useAuthStore()
 
-    const fetchTerritories = async () => {
+    const fetchFromServer = async () => {
         isLoading.value = true
         error.value = null
 
@@ -50,6 +50,6 @@ export const useTerritoryStore = defineStore('territory', () => {
     return {
         data,
         isLoading,
-        fetchTerritories
+        fetchFromServer
     }
 })

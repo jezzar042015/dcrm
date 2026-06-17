@@ -13,12 +13,14 @@
   import { usePageStore } from './stores/pages';
   import { useTerritoryStore } from './stores/territories.ts';
   import { useContactCallStore } from './stores/calls.ts';
+  import { usePublishersStore } from './stores/pubs.ts';
 
   const pages = usePageStore()
   const auth = useAuthStore()
   const contacts = useContactStore()
   const calls = useContactCallStore()
   const terr = useTerritoryStore()
+  const pubs = usePublishersStore()
 
   const isLoading = computed(() => {
     return contacts.isLoading || terr.isLoading || calls.isLoading
@@ -27,15 +29,10 @@
   onMounted(async () => {
     if (auth.token) {
       pages.active = 'dashboard'
-      await contacts.fetchContacts()
-      await calls.fetchCalls()
-      await terr.fetchTerritories()
-
-      // const targetSample = contacts.contacts.find(t => t[0] === 'tac00011')
-      // if (targetSample) {
-      //   contacts.onDetail = targetSample
-      //   pages.active = 'contact-details'
-      // }
+      await contacts.fetchFromServer()
+      await calls.fetchFromServer()
+      await terr.fetchFromServer()
+      await pubs.fetchFromServer()
 
     } else if (auth.userIsPending) {
       pages.active = 'user-pending'

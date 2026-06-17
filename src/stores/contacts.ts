@@ -51,7 +51,7 @@ export const useContactStore = defineStore('contacts', () => {
     })
 
 
-    const fetchContacts = async () => {
+    const fetchFromServer = async () => {
         isLoading.value = true
         error.value = null
 
@@ -91,6 +91,6 @@ export const useContactStore = defineStore('contacts', () => {
         groupedByStatus,
         isLoading,
         onDetail,
-        fetchContacts
+        fetchFromServer
     }
 })

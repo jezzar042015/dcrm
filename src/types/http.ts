@@ -1,4 +1,4 @@
-import type { ContactCallRow, ContactRow, TerritoryRow } from "./data"
+import type { ContactCallRow, ContactRow, PublisherRow, TerritoryRow } from "./data"
 
 export interface ContactResponse {
     status: 200 | 403
@@ -16,4 +16,10 @@ export interface ContactCallResponse {
     status: 200 | 403
     message: string
     data: ContactCallRow[]
+}
+
+export interface PublishersResponse {
+    status: 200 | 403
+    message: string
+    data: PublisherRow[]
 }

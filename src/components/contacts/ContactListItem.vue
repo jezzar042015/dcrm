@@ -9,9 +9,9 @@
                 </template>
             </div>
             <div class="p-4">
-                <div> {{ `${contact[1]} ${contact[2]}` }}</div>
-                <div v-if="contact[8] === 'Territory'" class="text-xs">{{ daysAgo }}</div>
-                <div v-if="contact[8] === 'Bible Study'" class="text-xs">{{ contact[9] }}</div>
+                <div class="text-sm"> {{ `${contact[1]} ${contact[2]}` }}</div>
+                <div v-if="contact[8] === 'Territory'" class="text-xs" :class="{'text-gray-400': daysAgo === 'No Call Visit'}">{{ daysAgo }}</div>
+                <div v-if="isBSorRV" class="text-xs">{{ pubName }}</div>
             </div>
         </div>
     </div>
@@ -28,11 +28,13 @@
     import { usePageStore } from '@/stores/pages';
     import { useProfileImageStore } from '@/stores/profileImages';
     import { useDaysAgo } from '@/composables/useDaysAgo';
+    import { usePublishersStore } from '@/stores/pubs';
 
     const contacts = useContactStore()
     const pages = usePageStore()
     const auth = useAuthStore()
     const calls = useContactCallStore()
+    const pubs = usePublishersStore()
 
     const profile = useProfileImageStore()
     const imgSrc = ref<string>('')
@@ -52,6 +54,12 @@
 
     const { daysAgo } = useDaysAgo(latestCall)
 
+    const isBSorRV = computed(() => ['Bible Study', 'Return Visit'].includes(contact[8]))
+
+    const pubName = computed(() => {
+        const pub = pubs.data.find(p => p[2] === contact[9])
+        return `${pub?.[3]} ${pub?.[4]}` 
+    })
 
     onMounted(async () => {
         if (contact[3]) {
