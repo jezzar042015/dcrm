@@ -30,10 +30,10 @@ import ContactsMap from './pages/maps/ContactsMap.vue';
   onMounted(async () => {
     if (auth.token) {
       pages.active = 'dashboard'
-      // contacts.fetchFromServer()
-      // calls.fetchFromServer()
+      contacts.fetchFromServer()
+      calls.fetchFromServer()
       terr.fetchFromServer()
-      // pubs.fetchFromServer()
+      pubs.fetchFromServer()
 
     } else if (auth.userIsPending) {
       pages.active = 'user-pending'
