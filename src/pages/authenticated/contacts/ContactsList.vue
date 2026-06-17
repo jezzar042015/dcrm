@@ -1,84 +1,112 @@
 <template>
     <div class="h-screen overflow-hidden flex flex-col">
-        <div class="px-3 py-5 border-b border-b-gray-200">
-            <div class="flex gap-2 items-center">
-                <div @click="stepBack" class="cursor-pointer rounded-full p-2">
-                    <ArrowIcon class="h-5 w-5 rotate-180" />
+        <div class="flex flex-col border-b border-b-gray-200 shadow h-18">
+            <div class="px-5 pt-5 flex items-center gap-5 relative" @click="stepBack">
+                <div class="bg-gray-50 h-8 w-8 rounded-full flex items-center justify-center">
+                    <PeopleIcon class="h-5 opacity-60" />
                 </div>
-                <div class="font-bold text-lg">Contacts</div>
-            </div>
-            <div class="pl-11 flex items-center gap-2">
-                <div v-for="(title, i) in pageTitle" :key="title" class="flex gap-1 items-center text-xs">
-                    <CaretSmall class="h-4 w-4" v-if="i > 0" />
-                    <span class="">
-                        {{ title }}
-                    </span>
+                <div v-if="!showSearchInput" class="font-bold text-lg cursor-pointer">
+                    <div>Contacts</div>
+                    <div class="flex items-center font-normal gap-2 -mt-1">
+                        <div v-for="(title, i) in pageTitle" :key="title" class="flex gap-1 items-center text-xs">
+                            <CaretSmall class="h-4 w-4" v-if="i > 0" />
+                            <span class="">
+                                {{ title }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
+                <div v-if="!showSearchInput" class="absolute right-5 p-1 cursor-pointer"
+                    @click="showSearchInput = true">
+                    <SearchGlass class="h-5 w-5" />
+                </div>
+                <div v-else class="flex gap-4">
+                    <input type="search" class="border-2 py-2 px-4 rounded-sm -mt-1 text-sm">
+                    <XCloseIcon class="h-5 w-5 mt-1 cursor-pointer" @click="showSearchInput = false" />
+                </div>
+
             </div>
         </div>
-        <div class="flex-1 overflow-auto">
 
-            <template v-if="section === 'status'">
-                <ContactGroupedByStatus :grouped-by-status="contacts.groupedByStatus" @select-status="selectStatus" />
-            </template>
+        <div class="flex-1 overflow-auto relative">
+            <Transition :name="transitionName" mode="out-in">
+                <div :key="section">
+                    <template v-if="section === 'status'">
+                        <ContactGroupedByStatus :grouped-by-status="contacts.groupedByStatus"
+                            @select-status="selectStatus" />
+                    </template>
 
-            <template v-if="section === 'towns'">
-                <ContactGroupedByTown :towns @select-town="selectTown" />
-            </template>
+                    <template v-else-if="section === 'towns'">
+                        <ContactGroupedByTown :towns @select-town="selectTown" />
+                    </template>
 
-            <template v-if="section === 'contacts'">
-                <template v-if="status !== 'Territory'" v-for="contact in townContacts" :key="contact[0]">
-                    <ContactListItem :contact />
-                </template>
-                <template v-else>
-                    <div class="text-xs p-4 bg-gray-50">
-                        <template v-for="tg in territoryGrouped" :key="tg.territoryId">
-                            <div class="mb-11 shadow bg-white rounded-sm">
-                                <div class="flex gap-2 items-center justify-between bg-gray-100 py-2 px-2 font-semibold">
-                                    <div>
-                                        {{ tg.territoryName || 'No Territory Assignment' }}
+                    <template v-else-if="section === 'contacts'">
+                        <template v-if="status !== 'Territory'">
+                            <template v-for="contact in townContacts" :key="contact[0]">
+                                <ContactListItem :contact />
+                            </template>
+                        </template>
+
+                        <template v-else>
+                            <div class="text-xs p-4 bg-gray-50">
+                                <template v-for="tg in territoryGrouped" :key="tg.territoryId">
+                                    <div class="mb-11 shadow bg-white rounded-sm">
+                                        <div
+                                            class="flex gap-2 items-center justify-between bg-gray-100 py-2 px-2 font-semibold">
+                                            <div>
+                                                {{ tg.territoryName || 'No Territory Assignment' }}
+                                            </div>
+                                            <div>{{ tg.contacts.length }}</div>
+                                        </div>
+
+                                        <template v-for="contact in tg.contacts" :key="contact[0]">
+                                            <ContactListItem :contact />
+                                        </template>
                                     </div>
-                                    <div>{{ tg.contacts.length }}</div>
-                                </div>
-                                <div>
-                                    <template v-for="contact in tg.contacts" :key="contact[0]">
-                                        <ContactListItem :contact />
-                                    </template>
-                                </div>
+                                </template>
                             </div>
                         </template>
-                    </div>
-                </template>
-            </template>
+                    </template>
+                </div>
+            </Transition>
         </div>
         <BottomNav />
     </div>
 </template>
 
 <script setup lang="ts">
-    import ArrowIcon from '@/icon/ArrowIcon.vue';
+    import BottomNav from '@/components/BottomNav.vue';
     import CaretSmall from '@/icon/CaretSmall.vue';
     import ContactGroupedByStatus from '@/components/contacts/ContactGroupedByStatus.vue';
     import ContactGroupedByTown from '@/components/contacts/ContactGroupedByTown.vue';
     import ContactListItem from '@/components/contacts/ContactListItem.vue';
+    import PeopleIcon from '@/icon/PeopleIcon.vue';
+    import SearchGlass from '@/icon/SearchGlass.vue';
     import type { ContactRow } from '@/types/data';
-    import { computed, ref } from 'vue';
+    import { computed, ref, watch } from 'vue';
     import { useContactStore } from '@/stores/contacts';
-    import { usePageStore } from '@/stores/pages';
     import { useTerritoryStore } from '@/stores/territories';
-import BottomNav from '@/components/BottomNav.vue';
+    import XCloseIcon from '@/icon/XCloseIcon.vue';
 
+    type PageSections = 'status' | 'towns' | 'contacts'
     const contacts = useContactStore()
-    const pages = usePageStore()
     const terr = useTerritoryStore()
-    const section = ref<'status' | 'towns' | 'contacts'>('status')
+    const section = ref<PageSections>('status')
+    const previousSection = ref<PageSections>(section.value)
     const status = ref('')
     const town = ref('')
+    const showSearchInput = ref(false)
 
     const selectStatus = (stat: string) => {
         status.value = stat
         section.value = 'towns'
     }
+
+    const sectionOrder = {
+        status: 0,
+        towns: 1,
+        contacts: 2,
+    } as const
 
     const selectTown = (t: string) => {
         town.value = t
@@ -146,7 +174,7 @@ import BottomNav from '@/components/BottomNav.vue';
 
     const stepBack = () => {
         if (section.value == 'status') {
-            pages.active = 'dashboard'
+            // pages.active = 'dashboard'
         }
 
         if (section.value == 'towns') {
@@ -159,7 +187,7 @@ import BottomNav from '@/components/BottomNav.vue';
     }
 
     const pageTitle = computed(() => {
-        if (section.value === 'status') return []
+        if (section.value === 'status') return ['Select Contact Status']
         if (section.value === 'towns') return [status.value]
         if (section.value === 'contacts') return [
             status.value,
@@ -167,4 +195,52 @@ import BottomNav from '@/components/BottomNav.vue';
         ]
         return 'Contacts'
     })
+
+    watch(
+        () => section,
+        (_, oldValue) => {
+            previousSection.value = oldValue.value
+        }
+    )
+
+    const transitionName = computed(() => {
+        return sectionOrder[section.value] > sectionOrder[previousSection.value]
+            ? 'slide-left'
+            : 'slide-right'
+    })
 </script>
+
+<style scoped>
+
+    .slide-left-enter-active,
+    .slide-left-leave-active,
+    .slide-right-enter-active,
+    .slide-right-leave-active
+    {
+        transition: all 0.25s ease;
+    }
+
+    .slide-left-enter-from
+    {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    .slide-left-leave-to
+    {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    .slide-right-enter-from
+    {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    .slide-right-leave-to
+    {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+</style>

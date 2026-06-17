@@ -14,6 +14,7 @@
   import { useTerritoryStore } from './stores/territories.ts';
   import { useContactCallStore } from './stores/calls.ts';
   import { usePublishersStore } from './stores/pubs.ts';
+import ContactsMap from './pages/maps/ContactsMap.vue';
 
   const pages = usePageStore()
   const auth = useAuthStore()
@@ -29,10 +30,10 @@
   onMounted(async () => {
     if (auth.token) {
       pages.active = 'dashboard'
-      await contacts.fetchFromServer()
-      await calls.fetchFromServer()
-      await terr.fetchFromServer()
-      await pubs.fetchFromServer()
+      // contacts.fetchFromServer()
+      // calls.fetchFromServer()
+      // terr.fetchFromServer()
+      // pubs.fetchFromServer()
 
     } else if (auth.userIsPending) {
       pages.active = 'user-pending'
@@ -51,6 +52,7 @@
   <PendingUser v-if="pages.active === 'user-pending'" />
   <Dashboard v-if="pages.active === 'dashboard'" />
   <ContactDetails v-if="pages.active === 'contact-details'" />
+  <ContactsMap v-if="pages.active === 'map'" />
 
   <KeepAlive>
     <ContactsList v-if="pages.active === 'contacts-list'" />
