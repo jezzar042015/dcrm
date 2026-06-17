@@ -31,11 +31,11 @@
     const pages = usePageStore()
 
     const navItems = [
-        {
-            id: 'map',
-            label: 'Map',
-            icon: MapIcon,
-        },
+        // {
+        //     id: 'map',
+        //     label: 'Map',
+        //     icon: MapIcon,
+        // },
         {
             id: 'contacts-list',
             label: 'Contacts',

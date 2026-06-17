@@ -59,13 +59,13 @@
                             const base64Image = gps[5]
 
                             // 2. FALLBACK CONDITION: If base64Image is empty/null, use the DEFAULT_AVATAR
-                            const iconUrlToUse = (base64Image && base64Image.trim() !== "")
+                            const iconUrlToUse = (base64Image && (base64Image.trim() !== ""))
                                 ? base64Image
                                 : DEFAULT_AVATAR
 
                             const customIcon = L.icon({
                                 iconUrl: iconUrlToUse, // Safe! Never undefined or ""
-                                iconSize: [38, 38],
+                                iconSize: [20, 20],
                                 iconAnchor: [19, 38],
                                 popupAnchor: [0, -38],
                                 className: 'map-profile-avatar'

@@ -67,7 +67,7 @@ export const useContactLocationsStore = defineStore('locations', () => {
                     src = await profile.getCachedProfileImgOnly(pic) ?? ''
                 }
             }
-
+            
             // Cast the returned structure to satisfy your tuple definition
             return [
                 m[0], // id
@@ -81,6 +81,7 @@ export const useContactLocationsStore = defineStore('locations', () => {
 
         // TypeScript now happily accepts the resolved array matching ContactLocationRow[]
         imgMapped.value = await Promise.all(promises)
+        
     })
 
     return {
