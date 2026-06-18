@@ -65,7 +65,7 @@
 
                             const customIcon = L.icon({
                                 iconUrl: iconUrlToUse, // Safe! Never undefined or ""
-                                iconSize: [20, 20],
+                                iconSize: [50, 50],
                                 iconAnchor: [19, 38],
                                 popupAnchor: [0, -38],
                                 className: 'map-profile-avatar'
