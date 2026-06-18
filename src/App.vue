@@ -36,11 +36,14 @@
   onMounted(async () => {
     if (auth.token) {
       pages.active = 'dashboard'
-      contacts.fetchFromServer()
-      calls.fetchFromServer()
-      terr.fetchFromServer()
-      pubs.fetchFromServer()
-      locations.fetchFromServer()
+      
+      await Promise.all([
+        contacts.fetchFromServer(),
+        calls.fetchFromServer(),
+        terr.fetchFromServer(),
+        pubs.fetchFromServer(),
+        locations.fetchFromServer()
+      ])
 
     } else if (auth.userIsPending) {
       pages.active = 'user-pending'
