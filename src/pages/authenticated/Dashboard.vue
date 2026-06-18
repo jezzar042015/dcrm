@@ -9,12 +9,10 @@
             <div class="text-lg font-bold">Hi {{ auth.user?.name }}!</div>
         </div>
 
-        <div class="flex-1">
-            <!-- <div @click="gotoContactsList" class="my-5 px-4 py-2">
-                <div class="px-4 py-2 shadow round ">
-                    Contacts
-                </div>
-            </div> -->
+        <div class="flex-1 overflow-auto">
+            <pre >
+                {{ converages.userLateAssignments }}
+            </pre>
         </div>
 
         <BottomNav />
@@ -26,12 +24,13 @@
     import Sidebar from '@/components/Sidebar.vue';
     import { useAuthStore } from '@/stores/auth';
     import { usePageStore } from '@/stores/pages';
+    import { useTerritoryCoveragesStore } from '@/stores/territory-coverages';
     import { ref } from 'vue';
 
     const auth = useAuthStore()
     const pages = usePageStore()
     const sideBar = ref(false)
 
-    const gotoContactsList = () => pages.active = 'contacts-list'
+    const converages = useTerritoryCoveragesStore()
 
 </script>

@@ -52,7 +52,7 @@ export type ContactCallRow = [
   date_actual: string,
   publishers: string,
   mode: string,
-  status: string,
+  status: "" | "Successful" | "Not Home" | "No Response" | "Not Visited",
   remarks: string,
 ]
 
@@ -77,6 +77,21 @@ export type ContactLocationRow = [
   coordinates: string,
   remarks: string | null,
   src: string,
+]
+
+export type TerritoryCoverageRow = [
+  id: string,
+  territoryId: string,
+  assignment: string,
+  completion: string,
+  publishers: string,
+  remarks: string,
+  status: 'Assigned' | 'On Progress' | 'Completed',
+  dcrs: number,
+  not_started: number,
+  worked: number,
+  progress: number,
+  relatedCalls?: ContactCallRow[]
 ]
 
 export type GroupedContactsByStatus = {

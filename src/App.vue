@@ -16,6 +16,7 @@
   import { usePublishersStore } from './stores/pubs.ts';
   import { useTerritoryStore } from './stores/territories.ts';
   import { useContactLocationsStore } from './stores/locations.ts';
+  import { useTerritoryCoveragesStore } from './stores/territory-coverages.ts';
 
   const pages = usePageStore()
   const auth = useAuthStore()
@@ -24,25 +25,28 @@
   const terr = useTerritoryStore()
   const pubs = usePublishersStore()
   const locations = useContactLocationsStore()
+  const coverages = useTerritoryCoveragesStore()
 
   const isLoading = computed(() => {
     return contacts.isLoading ||
       terr.isLoading ||
       calls.isLoading ||
       pubs.isLoading ||
-      locations.isLoading
+      locations.isLoading ||
+      coverages.isLoading
   })
 
   onMounted(async () => {
     if (auth.token) {
       pages.active = 'dashboard'
-      
+
       await Promise.all([
         contacts.fetchFromServer(),
         calls.fetchFromServer(),
         terr.fetchFromServer(),
         pubs.fetchFromServer(),
-        locations.fetchFromServer()
+        locations.fetchFromServer(),
+        coverages.fetchFromServer(),
       ])
 
     } else if (auth.userIsPending) {
