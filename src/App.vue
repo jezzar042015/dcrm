@@ -41,14 +41,14 @@
     if (auth.token) {
       pages.active = 'dashboard'
 
-      // await Promise.all([
-      //   contacts.fetchFromServer(),
-      //   calls.fetchFromServer(),
-      //   terr.fetchFromServer(),
-      //   pubs.fetchFromServer(),
-      //   locations.fetchFromServer(),
-      //   coverages.fetchFromServer(),
-      // ])
+      await Promise.all([
+        contacts.fetchFromServer(),
+        calls.fetchFromServer(),
+        terr.fetchFromServer(),
+        pubs.fetchFromServer(),
+        locations.fetchFromServer(),
+        coverages.fetchFromServer(),
+      ])
 
     } else if (auth.userIsPending) {
       pages.active = 'user-pending'
