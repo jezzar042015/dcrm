@@ -12,11 +12,11 @@
         <div class="flex-1 overflow-auto">
             <div class="p-5">
 
-                <div class="p-3 shadow" @click="gotoUserPendingUpdates" v-if="coverages.userLateAssignmentsCallsCount > 0">
+                <div class="p-3 shadow bg-amber-100" @click="gotoUserPendingUpdates" v-if="coverages.userLateAssignmentsCallsCount > 0">
                     <div class="text-xs">
-                        You have pending visits to update
+                        You have pending assigned visits to update
                     </div>
-                    <div>
+                    <div class="font-bold text-lg">
                         {{ coverages.userLateAssignmentsCallsCount }}
                     </div>
                 </div>

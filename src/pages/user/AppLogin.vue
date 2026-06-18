@@ -68,9 +68,11 @@
     import { useAuthStore } from '@/stores/auth';
     import { useContactCallStore } from '@/stores/calls';
     import { useContactStore } from '@/stores/contacts';
+    import { useContactLocationsStore } from '@/stores/locations';
     import { usePageStore } from '@/stores/pages';
     import { usePublishersStore } from '@/stores/pubs';
     import { useTerritoryStore } from '@/stores/territories';
+    import { useTerritoryCoveragesStore } from '@/stores/territory-coverages';
     import { ref } from 'vue';
 
     const auth = useAuthStore()
@@ -79,6 +81,8 @@
     const calls = useContactCallStore()
     const terr = useTerritoryStore()
     const pubs = usePublishersStore()
+    const locations = useContactLocationsStore()
+    const coverages = useTerritoryCoveragesStore()
 
     const username = ref('')
     const password = ref('')
@@ -98,10 +102,14 @@
 
             if (resp) {
                 pages.active = 'dashboard'
-                contacts.fetchFromServer()
-                calls.fetchFromServer()
-                terr.fetchFromServer()
-                pubs.fetchFromServer()
+                await Promise.all([
+                    contacts.fetchFromServer(),
+                    calls.fetchFromServer(),
+                    terr.fetchFromServer(),
+                    pubs.fetchFromServer(),
+                    locations.fetchFromServer(),
+                    coverages.fetchFromServer(),
+                ])
 
             } else if (auth.userIsPending) {
                 pages.active = 'user-pending'
