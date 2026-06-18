@@ -6,13 +6,21 @@
             <div class="bg-gray-100 h-10 w-10 rounded-full overflow-hidden" @click="sideBar = true">
                 <img :src="auth.userProfileImg" alt="" v-if="auth.userProfileImg" class="h-full w-full object-cover">
             </div>
-            <div class="text-lg font-bold">Hi {{ auth.user?.name }}!</div>
+            <div class="text-lg font-bold">Hi {{ auth.associatedPublisher?.[3] }}!</div>
         </div>
 
         <div class="flex-1 overflow-auto">
-            <pre >
-                {{ converages.userLateAssignments }}
-            </pre>
+            <div class="p-5">
+
+                <div class="p-3 shadow" @click="gotoUserPendingUpdates" v-if="coverages.userLateAssignmentsCallsCount > 0">
+                    <div class="text-xs">
+                        You have pending visits to update
+                    </div>
+                    <div>
+                        {{ coverages.userLateAssignmentsCallsCount }}
+                    </div>
+                </div>
+            </div>
         </div>
 
         <BottomNav />
@@ -31,6 +39,7 @@
     const pages = usePageStore()
     const sideBar = ref(false)
 
-    const converages = useTerritoryCoveragesStore()
+    const coverages = useTerritoryCoveragesStore()
 
+    const gotoUserPendingUpdates = () => pages.active = 'user-pending-coverage-updates'
 </script>

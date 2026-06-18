@@ -74,6 +74,7 @@
     import ContactDetailField from '../../../components/contacts/ContactDetailField.vue';
     import ContactDetailSectionShutter from '../../../components/contacts/ContactDetailSectionShutter.vue';
     import FemaleProfile from '@/icon/FemaleProfile.vue';
+    import ImageViewer from '@/components/contacts/ImageViewer.vue';
     import MaleProfile from '@/icon/MaleProfile.vue';
     import { computed, onMounted, ref } from 'vue';
     import { useAuthStore } from '@/stores/auth.ts';
@@ -82,7 +83,6 @@
     import { usePageStore } from '@/stores/pages';
     import { useProfileImageStore } from '@/stores/profileImages.ts';
     import { useTerritoryStore } from '@/stores/territories.ts';
-    import ImageViewer from '@/components/contacts/ImageViewer.vue';
 
     const contacts = useContactStore()
     const pages = usePageStore()
@@ -150,7 +150,11 @@
     })
 
     const stepBack = () => {
-        pages.active = 'contacts-list'
+        if (pages.previous) {
+            pages.active = pages.previous
+        } else {
+            pages.active = 'contacts-list'
+        }
     }
 
     const relatedCalls = computed(() => {

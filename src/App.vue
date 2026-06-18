@@ -17,6 +17,7 @@
   import { useTerritoryStore } from './stores/territories.ts';
   import { useContactLocationsStore } from './stores/locations.ts';
   import { useTerritoryCoveragesStore } from './stores/territory-coverages.ts';
+  import UserPendingCoverageUpdates from './pages/territory/UserPendingCoverageUpdates.vue';
 
   const pages = usePageStore()
   const auth = useAuthStore()
@@ -40,14 +41,14 @@
     if (auth.token) {
       pages.active = 'dashboard'
 
-      await Promise.all([
-        contacts.fetchFromServer(),
-        calls.fetchFromServer(),
-        terr.fetchFromServer(),
-        pubs.fetchFromServer(),
-        locations.fetchFromServer(),
-        coverages.fetchFromServer(),
-      ])
+      // await Promise.all([
+      //   contacts.fetchFromServer(),
+      //   calls.fetchFromServer(),
+      //   terr.fetchFromServer(),
+      //   pubs.fetchFromServer(),
+      //   locations.fetchFromServer(),
+      //   coverages.fetchFromServer(),
+      // ])
 
     } else if (auth.userIsPending) {
       pages.active = 'user-pending'
@@ -67,6 +68,7 @@
   <Dashboard v-if="pages.active === 'dashboard'" />
   <ContactDetails v-if="pages.active === 'contact-details'" />
   <ContactsMap v-if="pages.active === 'map'" />
+  <UserPendingCoverageUpdates v-if="pages.active === 'user-pending-coverage-updates'" />
 
   <KeepAlive>
     <ContactsList v-if="pages.active === 'contacts-list'" />

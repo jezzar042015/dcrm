@@ -7,7 +7,8 @@ export type AppPages =
     'user-deactivated' |
     'contacts-list' |
     'contact-details' |
-    'map'
+    'map' |
+    'user-pending-coverage-updates'
 
 
 

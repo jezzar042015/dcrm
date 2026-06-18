@@ -116,6 +116,18 @@ export const useTerritoryCoveragesStore = defineStore('coverages', () => {
         )
     })
 
+    const userLateAssignmentsCallsCount = computed<number>(() => {
+        // 1. If there are no late assignments, the count is obviously 0
+        if (!userLateAssignments.value.length) return 0
+
+        // 2. Reduce the array to sum up the length of each 'relatedCalls' array
+        return userLateAssignments.value.reduce((total, coverage) => {
+            // Safe-navigation: check if relatedCalls exists, otherwise default to 0
+            const callsCount = coverage[11]?.length ?? 0
+            return total + callsCount
+        }, 0)
+    })
+
     return {
         data,
         isLoading,
@@ -124,6 +136,7 @@ export const useTerritoryCoveragesStore = defineStore('coverages', () => {
         lateAssignedCoverages,
         userUpcomingAssignments,
         userLateAssignments,
+        userLateAssignmentsCallsCount,
         fetchFromServer,
     }
 })
