@@ -50,6 +50,8 @@
                     <ContactDetailField label="Street/Sitio" :value="contacts.onDetail[13]" />
                     <ContactDetailField label="Address" :value="address" />
                     <ContactDetailField label="Landmark" :value="contacts.onDetail[12]" />
+
+                    <ContactMap :locations="contactLocations" :profile-image="imgSrc" v-if="hasDeterminedLocations" />
                 </div>
 
                 <ContactDetailSectionShutter @click="setSection('calls')" title="Visits"
@@ -83,6 +85,9 @@
     import { usePageStore } from '@/stores/pages';
     import { useProfileImageStore } from '@/stores/profileImages.ts';
     import { useTerritoryStore } from '@/stores/territories.ts';
+    import ContactMap from '@/components/contacts/ContactMap.vue';
+    import { useContactLocationsStore } from '@/stores/locations.ts';
+    import type { ContactLocationRow } from '@/types/data.ts';
 
     const contacts = useContactStore()
     const pages = usePageStore()
@@ -90,6 +95,7 @@
     const calls = useContactCallStore()
     const auth = useAuthStore()
     const profile = useProfileImageStore()
+    const locations = useContactLocationsStore()
 
     type DetailSections = 'location' | 'guardians' | 'calls' | ''
     const activeSection = ref<DetailSections>('location')
@@ -171,6 +177,15 @@
             if (src) imgSrc.value = src
         }
     }
+
+    const contactLocations = computed<ContactLocationRow[]>(() => {
+        if (!contacts.onDetail) return []
+        return locations.data.filter(c => c[1] === contacts.onDetail?.[0])
+    })
+
+    const hasDeterminedLocations = computed(() => {
+        return contactLocations.value.length > 0
+    })
 
     onMounted(() => {
         getProfileImg()

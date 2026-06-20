@@ -45,7 +45,10 @@
 
     const setOnDetail = () => {
         contacts.onDetail = contact
+        if (pages.active == 'contacts-list') pages.previous = 'contacts-list'
         pages.active = 'contact-details'
+
+            
     }
 
     const latestCall = computed(() => {

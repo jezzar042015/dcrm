@@ -14,12 +14,12 @@
 </template>
 
 <script setup lang="ts">
-    import BottomNav from '@/components/BottomNav.vue';
-    import "leaflet/dist/leaflet.css"
-    import L from 'leaflet'
-    import 'leaflet.markercluster/dist/MarkerCluster.css';
-    import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
     import "leaflet.markercluster";
+    import "leaflet/dist/leaflet.css"
+    import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+    import 'leaflet.markercluster/dist/MarkerCluster.css';
+    import BottomNav from '@/components/BottomNav.vue';
+    import L from 'leaflet'
     import { onMounted } from 'vue';
     import { useContactLocationsStore } from '@/stores/locations';
 
