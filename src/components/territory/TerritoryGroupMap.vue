@@ -133,7 +133,10 @@
             for (const item of mapCoordinates.value) {
                 L.marker(item.latLong, { icon: item.icon })
                     .addTo(map)
-                    .bindTooltip(item.contactName)
+                    .bindTooltip(`
+                        <div>${item.contactName}</div>
+                        <div class="text-xs">${item.type}</div>
+                    `)
             }
             // L.marker(primaryCoordinates.value, { icon: markerIcon.value })
             //     .addTo(map)
