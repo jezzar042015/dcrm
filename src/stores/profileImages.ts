@@ -48,8 +48,20 @@ export const useProfileImageStore = defineStore('profileImages', () => {
         // 4. Fallback: Request from Apps Script
         loadingFiles.value[file] = true
         try {
-            const url = `https://script.google.com/macros/s/AKfycbyZReqXsUttX2Gp4ujW7DKCIt-HZD0IZYkEALekOzEurZamWAQepA3UE684AO-GOkh-/exec?token=${authToken}&action=get-img&file=${file}`
-            const resp = await fetch(url)
+            const url = 'https://script.google.com/macros/s/AKfycbyZReqXsUttX2Gp4ujW7DKCIt-HZD0IZYkEALekOzEurZamWAQepA3UE684AO-GOkh-/exec'
+            const resp = await fetch(url, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+                body: JSON.stringify({
+                    file,
+                    action: 'get-img',
+                    token: authToken,
+                })
+            })
+
             const result = await resp.json()
 
             if (result.status === 'success') {

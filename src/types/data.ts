@@ -103,3 +103,9 @@ export type GroupedContactsByTown = {
   town: string;
   contacts: ContactRow[];
 };
+
+export type GroupedContactsByTerritory = {
+  territoryId: string;
+  territoryName: string;
+  contacts: ContactRow[];
+}

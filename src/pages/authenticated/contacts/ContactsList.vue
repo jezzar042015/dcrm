@@ -1,5 +1,5 @@
 <template>
-    <div class="h-[100dvh] overflow-hidden flex flex-col">
+    <div class="h-dvh overflow-hidden flex flex-col relative">
         <div class="flex flex-col border-b border-b-gray-200 shadow h-18">
             <div class="px-5 pt-5 flex items-center gap-5 relative" @click="stepBack">
                 <div class="bg-gray-50 h-8 w-8 rounded-full flex items-center justify-center">
@@ -70,7 +70,13 @@
                                             <div>
                                                 {{ tg.territoryName || 'No Territory Assignment' }}
                                             </div>
-                                            <div>{{ tg.contacts.length }}</div>
+                                            <div class="flex items-center gap-5">
+                                                <div class="p-1 bg-gray-50 shadow-sm rounded-sm"
+                                                    @click="setTerritoryGroupMapViewer(tg)">
+                                                    <MapIcon class="h-5" />
+                                                </div>
+                                                <div>{{ tg.contacts.length }}</div>
+                                            </div>
                                         </div>
 
                                         <template v-for="contact in tg.contacts" :key="contact[0]">
@@ -83,8 +89,9 @@
                     </template>
                 </div>
             </Transition>
+            <TerritoryGroupMap :grouped-territory="targetTerritoryGroupContacts" v-if="targetTerritoryGroupContacts && mapViewer" @close-viewer="mapViewer = false"/>
         </div>
-        <BottomNav @step-back-contacts="stepBack"/>
+        <BottomNav @step-back-contacts="stepBack" />
     </div>
 </template>
 
@@ -94,14 +101,15 @@
     import ContactGroupedByStatus from '@/components/contacts/ContactGroupedByStatus.vue';
     import ContactGroupedByTown from '@/components/contacts/ContactGroupedByTown.vue';
     import ContactListItem from '@/components/contacts/ContactListItem.vue';
+    import MapIcon from '@/icon/MapIcon.vue';
     import PeopleIcon from '@/icon/PeopleIcon.vue';
     import SearchGlass from '@/icon/SearchGlass.vue';
-    import type { ContactRow } from '@/types/data';
+    import TerritoryGroupMap from '@/components/territory/TerritoryGroupMap.vue';
+    import type { ContactRow, GroupedContactsByTerritory } from '@/types/data';
     import { computed, ref, useTemplateRef, watch } from 'vue';
+    import { onClickOutside } from '@vueuse/core';
     import { useContactStore } from '@/stores/contacts';
     import { useTerritoryStore } from '@/stores/territories';
-    import { onClickOutside } from '@vueuse/core';
-
     type PageSections = 'status' | 'towns' | 'contacts'
     const contacts = useContactStore()
     const terr = useTerritoryStore()
@@ -110,6 +118,8 @@
     const status = ref('')
     const town = ref('')
     const showSearchInput = ref(false)
+    const mapViewer = ref(false)
+    const targetTerritoryGroupContacts = ref<GroupedContactsByTerritory | undefined>()
 
     const searchBox = useTemplateRef('searchBox')
 
@@ -163,7 +173,7 @@
         return targetTownContacts.sort((a, b) => a[1].localeCompare(b[1]))
     })
 
-    const territoryGrouped = computed(() => {
+    const territoryGrouped = computed<GroupedContactsByTerritory[]>(() => {
         const territoryGroups = new Map<string, ContactRow[]>();
 
         for (const row of townContacts.value) {
@@ -213,6 +223,11 @@
         ]
         return 'Contacts'
     })
+
+    const setTerritoryGroupMapViewer = (targetTerritoryGroup: GroupedContactsByTerritory) => {
+        targetTerritoryGroupContacts.value = targetTerritoryGroup
+        mapViewer.value = true
+    }
 
     watch(
         () => section,

@@ -1,5 +1,6 @@
 <template>
-    <div id="contact-map" class="z-0" style="height: 300px;"></div>
+    <div v-if="primaryCoordinates" id="contact-map" class="z-0" style="height: 300px;"></div>
+   
 </template>
 
 <script setup lang="ts">
@@ -8,7 +9,7 @@
     import { computed, onMounted, watch } from "vue";
     import type { ContactLocationRow } from "@/types/data";
 
-    let map: L.Map
+    let map: L.Map | null = null
 
     const { locations, profileImage } = defineProps<{
         locations: ContactLocationRow[],
@@ -48,6 +49,12 @@
     const initMap = () => {
         if (primaryCoordinates.value) {
 
+            // Destroy previous map instance
+            if (map) {
+                map.remove()
+                map = null
+            }
+
             map = L.map('contact-map').setView(
                 primaryCoordinates.value,
                 16
@@ -61,7 +68,7 @@
 
             L.marker(primaryCoordinates.value, { icon: markerIcon.value })
                 .addTo(map)
-                // .bindPopup('Primary Location')
+            // .bindPopup('Primary Location')
         }
     }
 

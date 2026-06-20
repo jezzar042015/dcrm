@@ -1,5 +1,5 @@
 <template>
-    <div class="h-[100dvh] overflow-hidden flex flex-col relative">
+    <div class="h-dvh overflow-hidden flex flex-col relative">
         <ImageViewer :src="targetImg" v-if="imgViewer" @close-viewer="closeViewer" />
         <div class="px-3 py-5 border-b border-b-gray-200">
             <div class="flex gap-2 items-center">
@@ -52,6 +52,10 @@
                     <ContactDetailField label="Landmark" :value="contacts.onDetail[12]" />
 
                     <ContactMap :locations="contactLocations" :profile-image="imgSrc" v-if="hasDeterminedLocations" />
+                    <div v-else class="text-sm bg-amber-500 text-white py-1 px-2">
+                        <div class="text-xs">NOTE:</div>
+                        <div> No GPS location added for this contact!</div>
+                    </div>
                 </div>
 
                 <ContactDetailSectionShutter @click="setSection('calls')" title="Visits"
