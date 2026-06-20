@@ -89,10 +89,12 @@
                     </template>
                 </div>
             </Transition>
-            <TerritoryGroupMap :grouped-territory="targetTerritoryGroupContacts" v-if="targetTerritoryGroupContacts && mapViewer" @close-viewer="mapViewer = false"/>
         </div>
         <BottomNav @step-back-contacts="stepBack" />
     </div>
+    <Teleport to="body">
+        <TerritoryGroupMap :grouped-territory="targetTerritoryGroupContacts" v-if="targetTerritoryGroupContacts && mapViewer" @close-viewer="mapViewer = false"/>
+    </Teleport>
 </template>
 
 <script setup lang="ts">
