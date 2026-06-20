@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-[100dvh] flex items-center justify-center bg-gray-50 px-4">
+    <div class="h-[100dvh] flex items-center justify-center bg-gray-50 px-4">
         <div 
             class="max-w-md w-full text-center p-8 bg-white rounded-xl shadow-lg border border-gray-100 transition-transform duration-300"
             :class="{ 'shake-animation': showFeedback && !isApproved }"

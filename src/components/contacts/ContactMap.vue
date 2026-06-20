@@ -1,5 +1,5 @@
 <template>
-    <div id="contact-map" style="height: 300px;"></div>
+    <div id="contact-map" class="z-0" style="height: 300px;"></div>
 </template>
 
 <script setup lang="ts">
@@ -46,7 +46,7 @@
     })
 
     const initMap = () => {
-        if (primaryCoordinates.value && profileImage) {
+        if (primaryCoordinates.value) {
 
             map = L.map('contact-map').setView(
                 primaryCoordinates.value,
@@ -61,7 +61,7 @@
 
             L.marker(primaryCoordinates.value, { icon: markerIcon.value })
                 .addTo(map)
-                .bindPopup('Primary Location')
+                // .bindPopup('Primary Location')
         }
     }
 

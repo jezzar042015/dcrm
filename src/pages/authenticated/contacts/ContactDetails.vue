@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-[100dvh] overflow-hidden flex flex-col relative">
+    <div class="h-[100dvh] overflow-hidden flex flex-col relative">
         <ImageViewer :src="targetImg" v-if="imgViewer" @close-viewer="closeViewer" />
         <div class="px-3 py-5 border-b border-b-gray-200">
             <div class="flex gap-2 items-center">

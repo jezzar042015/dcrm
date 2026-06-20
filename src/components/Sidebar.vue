@@ -1,6 +1,6 @@
 <template>
     <Transition name="overlay">
-        <div v-if="show" class="w-full min-h-[100dvh] absolute inset-0 bg-black/60 z-10" @click.self="emits('closeSideBar')">
+        <div v-if="show" class="w-full h-[100dvh] absolute inset-0 bg-black/60 z-10" @click.self="emits('closeSideBar')">
             <Transition name="sidebar">
                 <div class="p-6 w-10/12 h-full bg-white shadow overflow-hidden flex flex-col">
                     <div>

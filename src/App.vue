@@ -8,16 +8,16 @@
   import Dashboard from './pages/authenticated/Dashboard.vue';
   import PendingUser from './pages/user/PendingUser.vue';
   import ProgressLine from './components/ProgressLine.vue';
+  import UserPendingCoverageUpdates from './pages/territory/UserPendingCoverageUpdates.vue';
   import { computed, KeepAlive, onMounted } from 'vue';
   import { useAuthStore } from './stores/auth';
   import { useContactCallStore } from './stores/calls.ts';
+  import { useContactLocationsStore } from './stores/locations.ts';
   import { useContactStore } from './stores/contacts.ts';
   import { usePageStore } from './stores/pages';
   import { usePublishersStore } from './stores/pubs.ts';
-  import { useTerritoryStore } from './stores/territories.ts';
-  import { useContactLocationsStore } from './stores/locations.ts';
   import { useTerritoryCoveragesStore } from './stores/territory-coverages.ts';
-  import UserPendingCoverageUpdates from './pages/territory/UserPendingCoverageUpdates.vue';
+  import { useTerritoryStore } from './stores/territories.ts';
 
   const pages = usePageStore()
   const auth = useAuthStore()
@@ -46,8 +46,8 @@
         calls.fetchFromServer(),
         terr.fetchFromServer(),
         pubs.fetchFromServer(),
-        locations.fetchFromServer(),
         coverages.fetchFromServer(),
+        locations.fetchFromServer(),
       ])
 
     } else if (auth.userIsPending) {

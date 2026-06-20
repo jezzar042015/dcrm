@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-[100dvh] overflow-hidden flex flex-col">
+    <div class="h-[100dvh] overflow-hidden flex flex-col">
         <div class="flex flex-col border-b border-b-gray-200 shadow h-18">
             <div class="px-5 pt-5 flex items-center gap-5 relative" @click="stepBack">
                 <div class="bg-gray-50 h-8 w-8 rounded-full flex items-center justify-center">

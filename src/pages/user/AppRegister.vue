@@ -1,5 +1,5 @@
 <template>
-    <div class="relative min-h-[100dvh] overflow-hidden flex flex-col items-center justify-center">
+    <div class="relative h-[100dvh] overflow-hidden flex flex-col items-center justify-center">
         <BlobAmber />
         <div class="w-full px-10">
             <div class="font-extrabold text-xl w-full mb-8">SLC Tacloban City</div>
