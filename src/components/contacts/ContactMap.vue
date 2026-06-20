@@ -5,7 +5,7 @@
 <script setup lang="ts">
     import "leaflet/dist/leaflet.css"
     import L, { type LatLngExpression } from 'leaflet'
-    import { computed, watch } from "vue";
+    import { computed, onMounted, watch } from "vue";
     import type { ContactLocationRow } from "@/types/data";
 
     let map: L.Map
@@ -46,7 +46,7 @@
     })
 
     const initMap = () => {
-        if (primaryCoordinates.value && markerIcon.value) {
+        if (primaryCoordinates.value && profileImage) {
 
             map = L.map('contact-map').setView(
                 primaryCoordinates.value,
@@ -71,6 +71,10 @@
             initMap()
         }
     )
+
+    onMounted(() => {
+        initMap()
+    })
 
 
 </script>

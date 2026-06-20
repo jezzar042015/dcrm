@@ -20,13 +20,13 @@
     import 'leaflet.markercluster/dist/MarkerCluster.css';
     import BottomNav from '@/components/BottomNav.vue';
     import L from 'leaflet'
-    import { onMounted } from 'vue';
+    import { onMounted, watch } from 'vue';
     import { useContactLocationsStore } from '@/stores/locations';
 
     const locations = useContactLocationsStore()
     let map: L.Map
 
-    onMounted(() => {
+    const loadMap = () => {
         map = L.map('map').setView(
             [11.22027, 125.0034878],
             16
@@ -80,7 +80,14 @@
 
             markers.addTo(map)
         }
+
+    }
+
+    onMounted(() => {
+        loadMap()
     })
+
+    watch(() => locations.imgMapped, () => loadMap())
 </script>
 
 <style scoped>
