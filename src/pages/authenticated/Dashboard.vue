@@ -1,5 +1,5 @@
 <template>
-    <div class="h-screen overflow-hidden flex flex-col relative">
+    <div class="min-h-[100dvh] overflow-hidden flex flex-col relative">
         <Sidebar :show="sideBar" @close-side-bar="sideBar = false" />
 
         <div class="p-5 shadow flex items-center gap-5">
